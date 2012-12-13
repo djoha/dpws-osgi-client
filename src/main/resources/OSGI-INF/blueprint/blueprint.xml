@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
+	xmlns:cm="http://aries.apache.org/blueprint/xmlns/blueprint-cm/v1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd">
+
+	<camelContext id="dpwsCamelContext"
+		xmlns="http://camel.apache.org/schema/blueprint" xmlns:pc="http://www.tut.fi/fast/plantcockpit">
+		<route>
+			<from
+				uri="multicast://239.255.255.250:3702?networkInterface={{networkInterface}}" />
+			<!-- This shit's no longer required in Camel 2.9 -->
+			<choice>
+				<when>
+					<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+						'Header']/*[local-name() =
+						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Hello']
+					</xpath>
+					<bean ref="client" method="helloReceived" />
+				</when>
+				<when>
+					<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+						'Header']/*[local-name() =
+						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Bye']
+					</xpath>
+					<bean ref="client" method="byeReceived" />
+				</when>
+				<when>
+					<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+						'Header']/*[local-name() =
+						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe']
+					</xpath>
+					<bean ref="client" method="probeReceived" />
+				</when>
+				<otherwise>
+					<bean ref="client" method="messageReceived" />
+				</otherwise>
+			</choice>
+		</route>
+
+		<!-- Outgoing probes -->
+		<route> 
+			<from uri="direct:discoveryProbe" />
+			<bean ref="discovery" method="sendProbe" />
+		</route>
+		<!-- Incoming Probe Matches -->
+		<route>
+			<from uri="direct:discoveryManager"/>
+			<choice>
+				<when>
+					<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+						'Header']/*[local-name() =
+						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches']
+					</xpath>
+					<bean ref="client" method="probeMatchesReceived" />
+				</when>
+				<otherwise>
+					<bean ref="client" method="messageReceived" />
+				</otherwise>
+			</choice>
+		</route>
+	</camelContext>
+
+	<cm:property-placeholder persistent-id="fi.tut.fast.smx.smxosgitemplate">
+		<cm:default-properties>
+			<cm:property name="some.property" value="someString" />
+			<cm:property name="host" value="192.168.2.135" />
+			<cm:property name="networkInterface" value="en0" />
+			<cm:property name="port" value="8808" />
+			<cm:property name="eventSinkPath" value="esink" />
+			<cm:property name="client.eventSinkPath" value="eventSink" />
+			<cm:property name="probematch.listen.port" value="61094" />
+		</cm:default-properties>
+	</cm:property-placeholder>
+
+	<bean id="client" class="fi.tut.fast.dpws.DpwsClient" init-method="init"
+		destroy-method="destroy">
+		<property name="someProperty" value="${some.property}" />
+		<!-- <property name="probeMatchEndpointAddress" value="udp://${host}:${probematch.listen.port}/wsd"/> -->
+		<property name="probeMatchEndpointAddress" value="http://${host}:${port}/${eventSinkPath}" />
+		<property name="context" ref="blueprintBundleContext" />
+	</bean>
+
+	<bean id="discovery" class="fi.tut.fast.dpws.discovery.DiscoveryManager"
+		init-method="init" destroy-method="destroy">
+		<property name="networkInterface" value="${networkInterface}" />
+		<property name="host" value="${host}" />
+	</bean>
+
+	<service id="dpwsClientService" ref="client"
+		interface="fi.tut.fast.dpws.IDpwsClient" auto-export="disabled" />
+
+
+</blueprint>

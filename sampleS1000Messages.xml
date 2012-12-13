@@ -1,0 +1,482 @@
+
+Probe
+
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
+	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:63d93000-3885-11e2-8025-d7edce9ed125
+		</wsa:MessageID>
+		<wsa:To>urn:schemas-xmlsoap-org:ws:2005:04:discovery</wsa:To>
+	</s12:Header>
+	<s12:Body>
+		<wsd:Probe />
+	</s12:Body>
+</s12:Envelope>
+
+Probe Match
+&JPE
+0&Ov+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:6169dbd7-184b-4045-730f-0050c2899117
+		</wsa:MessageID>
+		<wsa:RelatesTo>urn:uuid:75188b7e-04b6-482a-af9c-fcb610f64b07
+		</wsa:RelatesTo>
+		<wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+		</wsa:To>
+	</s12:Header>
+	<s12:Body>
+		<wsd:ProbeMatches>
+			<wsd:ProbeMatch>
+				<wsa:EndpointReference>
+					<wsa:Address>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117
+					</wsa:Address>
+				</wsa:EndpointReference>
+				<wsd:Types>wsdp:Device</wsd:Types>
+				<wsd:Scopes />
+				<wsd:XAddrs>http://192.168.3.79:80/dpws/device</wsd:XAddrs>
+				<wsd:MetadataVersion>13</wsd:MetadataVersion>
+			</wsd:ProbeMatch>
+		</wsd:ProbeMatches>
+	</s12:Body>
+</s12:Envelope>
+
+
+/// TESTIMG AGAIN PROBE
+<?xml version="1.0" encoding="utf-8" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+	<env:Header>
+		<wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+		</wsa:Action>
+		<wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:schemas-xmlsoap-org:ws:2005:04:discovery
+		</wsa:To>
+		<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:uuid:494bfbb0-a869-4ed9-99d7-2e7428c5b4ec
+		</wsa:MessageID>
+		<wsa:ReplyTo xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+			<wsa:EndpointReference>
+				<wsa:Address>udp://192.168.2.135:61094/wsd</wsa:Address>
+			</wsa:EndpointReference>
+		</wsa:ReplyTo>
+	</env:Header>
+	<env:Body>
+		<wsd:Probe />
+	</env:Body>
+</env:Envelope>
+
+
+Get Device Request
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
+	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Get
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:66007cd0-3885-11e2-8026-d7edce9ed125
+		</wsa:MessageID>
+		<wsa:ReplyTo>
+			<wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+			</wsa:Address>
+		</wsa:ReplyTo>
+		<wsa:To>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117</wsa:To>
+	</s12:Header>
+	<s12:Body />
+</s12:Envelope>
+
+Get Response
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:e2daba23-93fc-4815-7b7f-0050c2899117
+		</wsa:MessageID>
+		<wsa:RelatesTo>urn:uuid:66007cd0-3885-11e2-8026-d7edce9ed125
+		</wsa:RelatesTo>
+		<wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+		</wsa:To>
+		<wsa:From>
+			<wsa:Address>http://192.168.3.79:80/dpws/device</wsa:Address>
+		</wsa:From>
+	</s12:Header>
+	<s12:Body>
+		<wsx:Metadata>
+			<wsx:MetadataSection
+				Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/ThisModel">
+				<wsdp:ThisModel>
+					<wsdp:Manufacturer xml:lang="en">Inico
+						Technologies
+						Ltd.</wsdp:Manufacturer>
+					<wsdp:ManufacturerUrl>http://www.inicotech.com/</wsdp:ManufacturerUrl>
+					<wsdp:ModelName xml:lang="en">S1000</wsdp:ModelName>
+				</wsdp:ThisModel>
+			</wsx:MetadataSection>
+			<wsx:MetadataSection
+				Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/ThisDevice">
+				<wsdp:ThisDevice>
+					<wsdp:FriendlyName xml:lang="en">SomeDevice</wsdp:FriendlyName>
+					<wsdp:FirmwareVersion>2.3.3RC2</wsdp:FirmwareVersion>
+					<wsdp:SerialNumber>2-62</wsdp:SerialNumber>
+				</wsdp:ThisDevice>
+			</wsx:MetadataSection>
+			<wsx:MetadataSection
+				Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/Relationship">
+				<wsdp:Relationship
+					Type="http://schemas.xmlsoap.org/ws/2006/02/devprof/host">
+					<wsdp:Hosted>
+						<wsa:EndpointReference>
+							<wsa:Address>http://192.168.3.79:80/dpws/ws01</wsa:Address>
+						</wsa:EndpointReference>
+						<wsdp:Types>SomeServicePortType</wsdp:Types>
+						<wsdp:ServiceId>SomeService</wsdp:ServiceId>
+					</wsdp:Hosted>
+				</wsdp:Relationship>
+			</wsx:MetadataSection>
+		</wsx:Metadata>
+	</s12:Body>
+</s12:Envelope>
+
+
+Get Service Request
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
+	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
+	xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/Get
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:66219960-3885-11e2-8027-d7edce9ed125
+		</wsa:MessageID>
+		<wsa:ReplyTo>
+			<wsa:Address>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+			</wsa:Address>
+		</wsa:ReplyTo>
+		<wsa:To>http://192.168.3.79:80/dpws/ws01</wsa:To>
+	</s12:Header>
+	<s12:Body />
+</s12:Envelope>
+
+Service Get Response
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsx="http://schemas.xmlsoap.org/ws/2004/09/mex">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:90ffa5b4-8a50-4bcd-6261-0050c2899117
+		</wsa:MessageID>
+		<wsa:RelatesTo>urn:uuid:66219960-3885-11e2-8027-d7edce9ed125
+		</wsa:RelatesTo>
+		<wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+		</wsa:To>
+		<wsa:From>
+			<wsa:Address>http://192.168.3.79:80/dpws/ws01</wsa:Address>
+		</wsa:From>
+	</s12:Header>
+	<s12:Body>
+		<wsx:Metadata>
+			<wsx:MetadataSection Dialect="http://schemas.xmlsoap.org/wsdl/">
+				<wsx:Location>http://192.168.3.79:80/dpws/ws01</wsx:Location>
+			</wsx:MetadataSection>
+		</wsx:Metadata>
+	</s12:Body>
+</s12:Envelope>
+
+
+HTTP Get for WSDL
+
+GET /dpws/ws01 HTTP/1.1
+host: 192.168.3.79
+connection:
+close
+
+HTTP GET Response for WSDL
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<definitions name="SomeService" targetNamespace="http://www.tut.fi/wsdl/SomeService"
+	xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.tut.fi/wsdl/SomeService"
+	xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap12/">
+	<types>
+		<xsd:schema targetNamespace="http://www.tut.fi/wsdl/SomeService"
+			elementFormDefault="qualified">
+
+			<xsd:element name="OutputElementOne" type="xsd:string" />
+			<xsd:element name="InputElementOne">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="K1" type="xsd:double" />
+						<xsd:element name="K2" type="xsd:double" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+			<xsd:element name="OperationTwoResponse" type="xsd:string" />
+			<xsd:element name="OperationTwo">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="param" type="xsd:double" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+
+
+			<xsd:complexType name="somethingHappenedType">
+				<xsd:sequence>
+					<xsd:element name="what" type="xsd:string" />
+					<xsd:element name="where" type="xsd:string" />
+				</xsd:sequence>
+			</xsd:complexType>
+
+			<xsd:element name="somethingHappened" type="tns:somethingHappenedType" />
+
+
+		</xsd:schema>
+
+	</types>
+	<message name="InputElementOneMessage">
+		<part name="messageK" element="tns:InputElementOne" />
+	</message>
+	<message name="OutputElementOneMessage">
+		<part name="messageK2" element="tns:OutputElementOne" />
+	</message>
+
+	<message name="OperationTwoMessage">
+		<part name="messageAl" element="tns:OperationTwo" />
+	</message>
+	<message name="OperationTwoResponseMessage">
+		<part name="messageK2" element="tns:OperationTwoResponse" />
+	</message>
+
+	<message name="somethingHappenedMessage">
+		<part name="eventMessage1" element="tns:somethingHappened" />
+	</message>
+	<message name="somethingElseHappenedMessage">
+		<part name="eventMessage2" element="tns:somethingHappened" />
+	</message>
+
+	<portType name="SomeServicePortType" wse:EventSource="true">
+
+		<operation name="OperationOne">
+			<input message="tns:InputElementOneMessage" />
+			<output message="tns:OutputElementOneMessage" />
+		</operation>
+
+		<operation name="OperationTwo">
+			<input message="tns:OperationTwoMessage" />
+			<output message="tns:OperationTwoResponseMessage" />
+		</operation>
+
+		<operation name="somethingHappened">
+			<output message="tns:somethingHappenedMessage" />
+		</operation>
+
+		<operation name="somethingElseHappened">
+			<output message="tns:somethingElseHappenedMessage" />
+		</operation>
+
+	</portType>
+
+	<binding name="SomeServicePortType" type="tns:SomeServicePortType">
+		<soap:binding transport="http://schemas.xmlsoap.org/soap/http"
+			style="document" />
+
+		<operation name="OperationOne">
+			<soap:operation style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</operation>
+
+		<operation name="OperationTwo">
+			<soap:operation style="document" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</operation>
+
+		<operation name="somethingHappened">
+			<soap:operation style="document" />
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</operation>
+
+		<operation name="somethingElseHappened">
+			<soap:operation style="document" />
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</operation>
+
+	</binding>
+	<service name="SomeService">
+		<port name="SomeServicePortType" binding="tns:SomeServicePortType">
+			<soap:address location="http://192.168.2.62:80/dpws/ws01" />
+		</port>
+	</service>
+</definitions>
+
+
+Invoke Operation One
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
+	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<s12:Header>
+		<wsa:Action>http://www.tut.fi/wsdl/SomeService/SomeServicePortType/OperationOneRequest
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:6648d070-3885-11e2-8028-d7edce9ed125
+		</wsa:MessageID>
+		<wsa:To>http://192.168.3.79:80/dpws/ws01</wsa:To>
+	</s12:Header>
+	<s12:Body>
+		<i7:InputElementOne xmlns:i7="http://www.tut.fi/wsdl/SomeService"
+			xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<i7:K1 xsi:type="xs:double">0.04</i7:K1>
+			<i7:K2 xsi:type="xs:double">1000</i7:K2>
+		</i7:InputElementOne>
+	</s12:Body>
+</s12:Envelope>
+
+Operatoni One Response
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+	<s12:Header>
+		<wsa:Action>http://www.tut.fi/wsdl/SomeService/SomeServicePortType/OperationOneResponse
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:174a5bd2-075b-437e-6a6f-0050c2899117
+		</wsa:MessageID>
+		<wsa:RelatesTo>urn:uuid:6648d070-3885-11e2-8028-d7edce9ed125
+		</wsa:RelatesTo>
+		<wsa:From>
+			<wsa:Address>http://192.168.3.79:80/dpws/ws01</wsa:Address>
+		</wsa:From>
+	</s12:Header>
+	<s12:Body>
+		<OutputElementOne xmlns="http://www.tut.fi/wsdl/SomeService">K1: 4 CHARS, K2: 4 CHARS
+		</OutputElementOne>
+	</s12:Body>
+</s12:Envelope>
+
+
+Bye
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/Bye
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:56f18d93-4941-4701-6ea7-0050c2899117
+		</wsa:MessageID>
+		<wsa:To>urn:schemas-xmlsoap-org:ws:2005:04:discovery</wsa:To>
+		<wsd:AppSequence InstanceId="0" MessageNumber="1" />
+	</s12:Header>
+	<s12:Body>
+		<wsd:Bye>
+			<wsa:EndpointReference>
+				<wsa:Address>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117
+				</wsa:Address>
+			</wsa:EndpointReference>
+		</wsd:Bye>
+	</s12:Body>
+</s12:Envelope>
+
+Hello
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/Hello
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:f609c904-6796-416a-40a3-0050c2899117
+		</wsa:MessageID>
+		<wsa:To>urn:schemas-xmlsoap-org:ws:2005:04:discovery</wsa:To>
+		<wsd:AppSequence InstanceId="0" MessageNumber="0" />
+	</s12:Header>
+	<s12:Body>
+		<wsd:Hello>
+			<wsa:EndpointReference>
+				<wsa:Address>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117
+				</wsa:Address>
+			</wsa:EndpointReference>
+			<wsd:Types>wsdp:Device</wsd:Types>
+			<wsd:Scopes />
+			<wsd:XAddrs>http://192.168.3.79:80/dpws/device</wsd:XAddrs>
+			<wsd:MetadataVersion>13</wsd:MetadataVersion>
+		</wsd:Hello>
+	</s12:Body>
+</s12:Envelope>
+
+
+
+JUNK
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:32228927-a548-45b9-44a5-0050c2899117
+		</wsa:MessageID>
+		<wsa:RelatesTo>urn:uuid:e2f0d716-fed0-4bf2-8fa8-5850c4dec700
+		</wsa:RelatesTo>
+		<wsa:To>http://schemas.xmlsoap.org/ws/2004/08/addressing/role/anonymous
+		</wsa:To>
+	</s12:Header>
+	<s12:Body>
+		<wsd:ProbeMatches>
+			<wsd:ProbeMatch>
+				<wsa:EndpointReference>
+					<wsa:Address>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117
+					</wsa:Address>
+				</wsa:EndpointReference>
+				<wsd:Types>wsdp:Device</wsd:Types>
+				<wsd:Scopes />
+				<wsd:XAddrs>http://192.168.3.79:80/dpws/device</wsd:XAddrs>
+				<wsd:MetadataVersion>13</wsd:MetadataVersion>
+			</wsd:ProbeMatch>
+		</wsd:ProbeMatches>
+	</s12:Body>
+</s12:Envelope>
+
+
+<?xml version="1.0" encoding="utf-8" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+	<env:Header>
+		<wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe
+		</wsa:Action>
+		<wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:schemas-xmlsoap-org:ws:2005:04:discovery
+		</wsa:To>
+		<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:uuid:e2f0d716-fed0-4bf2-8fa8-5850c4dec700
+		</wsa:MessageID>
+		<wsa:ReplyTo xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
+			<wsa:Address>http://192.168.2.135:8808/esink</wsa:Address>
+		</wsa:ReplyTo>
+	</env:Header>
+	<env:Body />
+</env:Envelope>
