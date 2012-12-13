@@ -1,0 +1,59 @@
+<!-- <route> <from uri="netty:udp://{{host}}:{{probematch.listen.port}}/wsd" 
+	/> <choice> <when> <xpath>/*[local-name() = 'Envelope']/*[local-name() = 
+	'Header']/*[local-name() = 'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches'] 
+	</xpath> <bean ref="client" method="probeMatchesReceived" /> </when> <otherwise> 
+	<bean ref="client" method="messageReceived" /> </otherwise> </choice> </route> 
+	<route> <from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}" /> <choice> 
+	<when> <xpath>/*[local-name() = 'Envelope']/*[local-name() = 'Header']/*[local-name() 
+	= 'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/ProbeMatches'] 
+	</xpath> <bean ref="client" method="probeMatchesReceived" /> </when> <otherwise> 
+	<bean ref="client" method="messageReceived" /> </otherwise> </choice> </route> -->
+
+
+^PE
+Ovv
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wsd="http://schemas.xmlsoap.org/ws/2005/04/discovery"
+	xmlns:wsdp="http://schemas.xmlsoap.org/ws/2006/02/devprof">
+	<s12:Header>
+		<wsa:Action>http://schemas.xmlsoap.org/ws/2005/04/discovery/Hello
+		</wsa:Action>
+		<wsa:MessageID>urn:uuid:f609c904-6796-416a-40a3-0050c2899117
+		</wsa:MessageID>
+		<wsa:To>urn:schemas-xmlsoap-org:ws:2005:04:discovery</wsa:To>
+		<wsd:AppSequence InstanceId="0" MessageNumber="0" />
+	</s12:Header>
+	<s12:Body>
+		<wsd:Hello>
+			<wsa:EndpointReference>
+				<wsa:Address>urn:uuid:ffffffff-ffff-1fff-4fff-0050c2899117
+				</wsa:Address>
+			</wsa:EndpointReference>
+			<wsd:Types>wsdp:Device</wsd:Types>
+			<wsd:Scopes />
+			<wsd:XAddrs>http://192.168.3.79:80/dpws/device</wsd:XAddrs>
+			<wsd:MetadataVersion>13</wsd:MetadataVersion>
+		</wsd:Hello>
+	</s12:Body>
+</s12:Envelope>
+
+
+
+P&JE8y@@OP$oPQ<?xml version="1.0" encoding="utf-8" ?>
+<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+	<env:Header>
+		<wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">{http://www.tut.fi/wsdl/SomeService}SomeServicePortType/OperationOneRequest
+		</wsa:Action>
+		<wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://192.168.3.79:80/dpws/ws01</wsa:To>
+		<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:uuid:4b4252ac-a629-4a51-b77d-d3200e6b742d
+		</wsa:MessageID>
+	</env:Header>
+	<env:Body>
+		<tns:InputElementOne xmlns:tns="http://www.tut.fi/wsdl/SomeService"
+			lang="FR">
+			<K1 xmlns="http://www.tut.fi/wsdl/SomeService">4.2</K1>
+			<K2 xmlns="http://www.tut.fi/wsdl/SomeService">6.3</K2>
+		</tns:InputElementOne>
+	</env:Body>
+</env:Envelope>

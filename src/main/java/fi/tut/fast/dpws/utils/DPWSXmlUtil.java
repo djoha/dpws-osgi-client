@@ -933,6 +933,10 @@ public class DPWSXmlUtil {
 			return obj;
 		}
 
+		public String getSystemId(){
+			return systemId;
+		}
+		
 		public XmlObject getEmptyElement(QName name) {
 			SchemaGlobalElement el = stl.findElement(name);
 			XmlObject obj = stl.newInstance(el.getType(), new XmlOptions()
@@ -1081,6 +1085,12 @@ public class DPWSXmlUtil {
 
 	public void writeXml(Node node) {
 		writeXml(node, System.out);
+	}
+	
+	public InputStream asInputStream(XmlObject obj){
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		writeXml(obj, baos);
+		return new ByteArrayInputStream(baos.toByteArray());
 	}
 
 	private String getBuiltInDefaultText(SchemaType t) {

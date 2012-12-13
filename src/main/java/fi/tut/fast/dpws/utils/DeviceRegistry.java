@@ -1,5 +1,6 @@
 package fi.tut.fast.dpws.utils;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -15,6 +16,7 @@ import javax.xml.soap.SOAPException;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 import org.xmlsoap.schemas.discovery.ByeType;
 import org.xmlsoap.schemas.discovery.HelloType;
 import org.xmlsoap.schemas.discovery.ProbeMatchType;
@@ -56,7 +58,6 @@ public class DeviceRegistry {
 		
 		OperationReference op1 = dev.getService("SomeService").getOperation("OperationOne");
 		
-		try {
 			
 			
 			Map<String,String> params = new HashMap<String,String>();
@@ -68,35 +69,35 @@ public class DeviceRegistry {
 			XmlObject iobj = op1.getInputParamter(params);
 			
 			System.out.println("Invoking OperationOne:");
-			DPWSXmlUtil.getInstance().writeXml(iobj);
-			
-			XmlObject oobj = op1.invoke(iobj);
+			try {
+				DPWSXmlUtil.getInstance().writeXml(iobj);
+				XmlObject oobj = op1.invoke(iobj);
 
-			System.out.println("Response:");
-			DPWSXmlUtil.getInstance().writeXml(oobj);
+				System.out.println("Response:");
+				DPWSXmlUtil.getInstance().writeXml(oobj);
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SOAPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (XmlException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SAXException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
-			
-			
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SOAPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (XmlException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+
 		
 		
 	}

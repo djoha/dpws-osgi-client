@@ -1,5 +1,6 @@
 package fi.tut.fast.dpws.device.remote;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -11,10 +12,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import fi.tut.fast.dpws.DPWSConstants;
 import fi.tut.fast.dpws.DpwsClient;
@@ -32,7 +37,7 @@ public class OperationReference {
 	ServiceRef parentService;
 	String inputAction;
 	String outputAction;
-	String portType;
+	QName portType;
 	
 	QName inputElement;
 	QName outputElement;
@@ -47,6 +52,7 @@ public class OperationReference {
 		this.faultElement = faultElement;
 		this.parentService = parentService;
 		this.name = name;
+		this.portType = portType;
 
 		event = ( inputElement == null );
 		
@@ -98,7 +104,7 @@ public class OperationReference {
 	}
 	
 	
-	public XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException{
+	public XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException{
 		
 		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
 		SOAPMessage msg = DPWSMessageFactory.getInputMessage(getInputAction(), parentService.getAddress().toString());
@@ -106,13 +112,9 @@ public class OperationReference {
 		if(!parentService.getTypeHandler().validate(input)){
 //			throw new XmlException("Invalid Input Message. Check Logs.");
 		}
-		
-		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		
-		msg.getSOAPBody().removeContents();
-		Node node = input.getDomNode().cloneNode(true);
-		msg.getSOAPPart().importNode(node, true);
-		msg.getSOAPBody().appendChild(node);
+				
+		Node n = msg.getSOAPPart().importNode(input.getDomNode(),true);
+		msg.getSOAPBody().appendChild(n);
 		
 		SOAPMessage outMessage = conn.call(msg, parentService.getAddress().toString());
 		return parentService.getTypeHandler().unmarshal(outMessage.getSOAPBody().extractContentAsDocument(),outputElement);
@@ -133,8 +135,8 @@ public class OperationReference {
 			return inputAction;
 		}
 		return String.format("%s/%s/%s%s",
-					namespace,
-					portType,
+					portType.getNamespaceURI(),
+					portType.getLocalPart(),
 					name,
 					DPWSConstants.INPUT_ACTION_SUFFIX);
 	}
@@ -144,10 +146,10 @@ public class OperationReference {
 			return outputAction;
 		}
 		return String.format("%s/%s/%s%s",
-					namespace,
-					portType,
-					name,
-					isEvent() ? "" : DPWSConstants.OUTPUT_ACTION_SUFFIX);
+				portType.getNamespaceURI(),
+				portType.getLocalPart(),
+				name,
+				isEvent() ? "" : DPWSConstants.OUTPUT_ACTION_SUFFIX);
 	}
 	
 	public boolean isEvent(){
