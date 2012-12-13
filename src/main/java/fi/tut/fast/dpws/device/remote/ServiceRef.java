@@ -239,6 +239,22 @@ public class ServiceRef extends Service {
 		return operations.get(name);
 	}
 	public Collection<OperationReference> getOperations(){
-		return operations.values();
+		List<OperationReference> events = new ArrayList<OperationReference>();
+		for(OperationReference ref : operations.values()){
+			if(!ref.isEvent()){
+				events.add(ref);
+			}
+		}
+		return events;
+	}
+	
+	public List<OperationReference> getEvents(){
+		List<OperationReference> events = new ArrayList<OperationReference>();
+		for(OperationReference ref : operations.values()){
+			if(ref.isEvent()){
+				events.add(ref);
+			}
+		}
+		return events;
 	}
 }

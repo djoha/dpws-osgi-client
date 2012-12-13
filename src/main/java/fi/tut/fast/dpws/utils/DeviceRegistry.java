@@ -53,52 +53,48 @@ public class DeviceRegistry {
 			return;
 		}
 		knownDevices.put(id, dev);
-		
-		System.out.println("Device Discovered:" + dev.toString());
-		
-		OperationReference op1 = dev.getService("SomeService").getOperation("OperationOne");
-		
-			
-			
-			Map<String,String> params = new HashMap<String,String>();
-					
-			params.put("K1", "4.2");
-			params.put("K2", "6.3");
-			params.put("@lang", "FR");
-			
-			XmlObject iobj = op1.getInputParamter(params);
-			
-			System.out.println("Invoking OperationOne:");
-			try {
-				DPWSXmlUtil.getInstance().writeXml(iobj);
-				XmlObject oobj = op1.invoke(iobj);
 
-				System.out.println("Response:");
-				DPWSXmlUtil.getInstance().writeXml(oobj);
-			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SOAPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (XmlException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (SAXException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
+		Logger.getLogger(getClass().getCanonicalName()).info("Device Discovered:" + dev.toString());
+//				
+//		OperationReference op1 = dev.getService("SomeService").getOperation("OperationOne");
+//		
+//			
+//			
+//			Map<String,String> params = new HashMap<String,String>();
+//					
+//			params.put("K1", "4.2");
+//			params.put("K2", "6.3");
+//			params.put("@lang", "FR");
+//			
+//			XmlObject iobj = op1.getInputParamter(params);
+//			
+//			System.out.println("Invoking OperationOne:");
+//			try {
+//				DPWSXmlUtil.getInstance().writeXml(iobj);
+//				XmlObject oobj = op1.invoke(iobj);
+//
+//				System.out.println("Response:");
+//				DPWSXmlUtil.getInstance().writeXml(oobj);
+//			} catch (JAXBException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (SOAPException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (XmlException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (ParserConfigurationException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (SAXException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 
-
-		
 		
 	}
 	

@@ -3,6 +3,8 @@ package fi.tut.fast.dpws;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
@@ -11,11 +13,15 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
+import org.apache.xmlbeans.XmlObject;
 import org.osgi.framework.BundleContext;
 import org.xmlsoap.schemas.discovery.ByeType;
 import org.xmlsoap.schemas.discovery.HelloType;
 import org.xmlsoap.schemas.discovery.ProbeMatchesType;
 
+import fi.tut.fast.dpws.device.remote.DeviceRef;
+import fi.tut.fast.dpws.device.remote.OperationReference;
+import fi.tut.fast.dpws.device.remote.ServiceRef;
 import fi.tut.fast.dpws.utils.DPWSMessageFactory;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 import fi.tut.fast.dpws.utils.DeviceRegistry;
@@ -68,13 +74,6 @@ public class DpwsClient implements IDpwsClient{
 	}
 
 
-	@Override
-	public String sayHello(Object whatever){
-		  logger.info(">>>> " + someProperty + " " + whatever);
-		  return "hello " + whatever;
-	}
-
-
 	public void destroy() throws Exception {
     	logger.info("OSGi Bundle Stopping.");
 	}
@@ -84,10 +83,8 @@ public class DpwsClient implements IDpwsClient{
     	DPWSMessageFactory.init();
     	DPWSXmlUtil.init(context);
     	registry = new DeviceRegistry();
-    	
-    	ByteArrayOutputStream probe = new ByteArrayOutputStream(DPWSConstants.WSD_PROBE_MAX_SIZE);
-    	DPWSMessageFactory.getDiscoveryProbe(probeMatchEndpointAddress).writeTo(probe);
-    	p.sendProbe(probe.toByteArray());
+    
+    	dpwsScan();
     	
 	}
 
@@ -120,21 +117,54 @@ public class DpwsClient implements IDpwsClient{
 		msg.writeTo(System.out);
 		System.out.flush();
 	}
+
+
+	@Override
+	public void dpwsScan() {
+		
+    	try {
+        	ByteArrayOutputStream probe = new ByteArrayOutputStream(DPWSConstants.WSD_PROBE_MAX_SIZE);
+			DPWSMessageFactory.getDiscoveryProbe(probeMatchEndpointAddress).writeTo(probe);
+	    	p.sendProbe(probe.toByteArray());
+		} catch (Exception e) {
+			logger.log(Level.SEVERE, "Failed to send Probe.", e);
+		}
+	}
+
+
+	@Override
+	public Map<String, DeviceRef> getDiscoveredDevices() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Map<String, ServiceRef> listServices(String deviceId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public Map<String, OperationReference> listOperations(String serviceId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public XmlObject getInputXmlTemplate(String operationid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public XmlObject invokeOperation(String operationId, XmlObject input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
-	
-//	public void stripHeader(Exchange message) throws IOException, SOAPException{
-//		SOAPMessage msg = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
-//	
-//		
-//		msg.setProperty(SOAPMessage.WRITE_XML_DECLARATION, "false");
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		msg.saveChanges();
-//		msg.writeTo(baos);
-//		
-//		System.out.println("Declaration stripped..." );
-//		msg.writeTo(System.out);
-//		
-//		message.getOut().setBody(baos.toByteArray());
-//	}
 
 }

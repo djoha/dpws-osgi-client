@@ -61,7 +61,7 @@
 		</route>
 	</camelContext>
 
-	<cm:property-placeholder persistent-id="fi.tut.fast.smx.smxosgitemplate">
+	<cm:property-placeholder persistent-id="fi.tut.fast.dpws.dpwsosgiclient">
 		<cm:default-properties>
 			<cm:property name="some.property" value="someString" />
 			<cm:property name="host" value="192.168.2.135" />
