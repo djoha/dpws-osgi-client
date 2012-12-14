@@ -10,11 +10,15 @@ package org.xmlsoap.schemas.addressing;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAnyElement;
 import javax.xml.bind.annotation.XmlType;
 import org.w3c.dom.Element;
+
+import fi.tut.fast.dpws.DPWSConstants;
 
 
 /**
@@ -75,4 +79,23 @@ public class ReferenceParametersType {
         return this.any;
     }
 
+    
+    // Convenience Method for wse:Identifier
+    
+    public String getIdentifier(){
+
+    	for(Object o : getAny()){
+    		if(o instanceof JAXBElement){
+    			JAXBElement jo = (JAXBElement)o;
+    			if(jo.getName().equals(DPWSConstants.WSE_IDENTIFIER_QNAME)){
+    				return jo.getValue().toString();
+    			}
+    		}
+    	}
+    	return null;
+    	
+    }
+    
+    
+    
 }

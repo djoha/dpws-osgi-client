@@ -66,6 +66,8 @@ public class DPWSConstants {
     public static final QName WSE_NOTIFYTO_QNAME = new QName(WSE_NAMESPACE,"NotifyTo",WSE_PREFIX);
     public static final QName WSE_FILTER_QNAME = new QName(WSE_NAMESPACE,"Filter",WSE_PREFIX);
     public static final QName WSE_IDENTIFIER_QNAME = new QName(WSE_NAMESPACE,"Identifier",WSE_PREFIX);
+    public static final QName WSE_SUBSCRIPTION_MANAGER_QNAME = new QName(WSE_NAMESPACE,"SubscriptionManager",WSE_PREFIX);
+    public static final QName WSE_EXPIRES_QNAME = new QName(WSE_NAMESPACE,"Expires",WSE_PREFIX);
     
     //WS-Transfer
     public static final String WST_GETRESPONSE_ACTION = "http://schemas.xmlsoap.org/ws/2004/09/transfer/GetResponse";

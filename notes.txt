@@ -1,11 +1,24 @@
 
-Invoking Ã
-Subscriptions Ã
-Jetty server 
-Hello/Bye Listening
 
-Device/Service/Operation Object Model
-Get
-GetMetadata
-Fetch WSDL
+TODO:
 
+Client Side
+Subscription Management
+Subscription Expiry, renewal, auto-renewal
+OSGi Device/Service Management Interface
+Browser Interface (jquery UI ? )
+WS-Discovery Device Resolve/ResolveMatch
+Adding directly (no Probe)
+Adding service from WSDL
+Dynamic event-routing approach
+Drools Integration test
+
+
+
+Device Side
+DeviceManager, local Device Registry
+Discovery
+EndpointAddress Management
+Build Service from WSDL
+Invoking
+Eventing and Subscriptions
