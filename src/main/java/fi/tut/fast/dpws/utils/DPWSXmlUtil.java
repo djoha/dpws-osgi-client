@@ -2,56 +2,30 @@ package fi.tut.fast.dpws.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Reader;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.math.BigInteger;
 import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticListener;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.JAXBIntrospector;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.stream.FactoryConfigurationError;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -60,34 +34,24 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.camel.Exchange;
-import org.apache.commons.io.FileUtils;
 import org.apache.xmlbeans.SchemaGlobalElement;
 import org.apache.xmlbeans.SchemaLocalAttribute;
 import org.apache.xmlbeans.SchemaParticle;
 import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.SchemaTypeLoader;
-import org.apache.xmlbeans.SchemaTypeSystem;
 import org.apache.xmlbeans.XmlAnySimpleType;
 import org.apache.xmlbeans.XmlBeans;
 import org.apache.xmlbeans.XmlCursor;
 import org.apache.xmlbeans.XmlCursor.XmlBookmark;
-import org.apache.xmlbeans.XmlDate;
-import org.apache.xmlbeans.XmlDateTime;
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlGDay;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
-import org.apache.xmlbeans.XmlTime;
 import org.apache.xmlbeans.impl.xb.xsdschema.SchemaDocument;
 import org.osgi.framework.BundleContext;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xmlsoap.schemas.addressing.AttributedURI;
 import org.xmlsoap.schemas.addressing.EndpointReferenceType;
 import org.xmlsoap.schemas.devprof.HostServiceType;
@@ -95,15 +59,6 @@ import org.xmlsoap.schemas.discovery.ByeType;
 import org.xmlsoap.schemas.discovery.HelloType;
 import org.xmlsoap.schemas.wsdl.TDefinitions;
 import org.xmlsoap.schemas.wsdl.TTypes;
-
-//import com.sun.codemodel.JClass;
-//import com.sun.codemodel.JCodeModel;
-//import com.sun.codemodel.JPackage;
-import com.sun.org.apache.xerces.internal.impl.xs.XMLSchemaLoader;
-import com.sun.org.apache.xerces.internal.util.DOMInputSource;
-import com.sun.org.apache.xerces.internal.xni.grammars.Grammar;
-import com.sun.org.apache.xerces.internal.xni.grammars.XSGrammar;
-import com.sun.org.apache.xerces.internal.xs.XSModel;
 
 import fi.tut.fast.dpws.DPWSConstants;
 //import com.sun.tools.xjc.Language;
@@ -325,9 +280,11 @@ public class DPWSXmlUtil {
 	public XmlObject buildElement(QName name, SchemaTypeLoader stl) {
 		SchemaGlobalElement el = stl.findElement(name);
 		SchemaType elType = el.getType();
-
-		XmlObject obj = stl.newInstance(elType, new XmlOptions()
-				.setSavePrettyPrint().setSavePrettyPrintIndent(4));
+//
+//		XmlObject obj = stl.newInstance(elType, new XmlOptions()
+//						.setDocumentType(elType));
+	
+		XmlObject obj = XmlObject.Factory.newInstance();
 		XmlCursor c = obj.newCursor();
 
 		c.toNextToken();
@@ -991,37 +948,37 @@ public class DPWSXmlUtil {
 		}
 	}
 
-	public class TypeHandlerOld {
-
-		private String systemId;
-		private SchemaTypeSystem sys;
-
-		public TypeHandlerOld(String systemId, SchemaTypeSystem sys)
-				throws JAXBException {
-			this.systemId = systemId;
-			this.sys = sys;
-		}
-
-		public Object unmarshal(Node node) throws JAXBException {
-			return unmarshaller.unmarshal(node);
-		}
-
-		public void marshal(Object obj, Node node) throws JAXBException {
-			// System.out.println("Unmarshalling: " +
-			// introspector.getElementName(obj));
-			// marshaller.marshal(obj, node);
-		}
-
-		public Object newObject(QName element) throws InstantiationException,
-				IllegalAccessException, ClassNotFoundException {
-			// String name =
-			// model.get(element).getType().getTypeClass().binaryName();
-			// Object o = loader.loadClass(name).newInstance();
-			// return o;
-			return null;
-		}
-
-	}
+//	public class TypeHandlerOld {
+//
+//		private String systemId;
+//		private SchemaTypeSystem sys;
+//
+//		public TypeHandlerOld(String systemId, SchemaTypeSystem sys)
+//				throws JAXBException {
+//			this.systemId = systemId;
+//			this.sys = sys;
+//		}
+//
+//		public Object unmarshal(Node node) throws JAXBException {
+//			return unmarshaller.unmarshal(node);
+//		}
+//
+//		public void marshal(Object obj, Node node) throws JAXBException {
+//			// System.out.println("Unmarshalling: " +
+//			// introspector.getElementName(obj));
+//			// marshaller.marshal(obj, node);
+//		}
+//
+//		public Object newObject(QName element) throws InstantiationException,
+//				IllegalAccessException, ClassNotFoundException {
+//			// String name =
+//			// model.get(element).getType().getTypeClass().binaryName();
+//			// Object o = loader.loadClass(name).newInstance();
+//			// return o;
+//			return null;
+//		}
+//
+//	}
 
 	// public void loadGrammars(String systemId, List<TTypes> types){
 	//

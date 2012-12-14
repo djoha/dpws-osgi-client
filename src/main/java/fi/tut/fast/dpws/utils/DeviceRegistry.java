@@ -1,32 +1,24 @@
 package fi.tut.fast.dpws.utils;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.soap.SOAPException;
-
-import org.apache.xmlbeans.XmlException;
-import org.apache.xmlbeans.XmlObject;
-import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 import org.xmlsoap.schemas.discovery.ByeType;
 import org.xmlsoap.schemas.discovery.HelloType;
 import org.xmlsoap.schemas.discovery.ProbeMatchType;
 import org.xmlsoap.schemas.discovery.ProbeMatchesType;
 
 import fi.tut.fast.dpws.device.remote.DeviceRef;
-import fi.tut.fast.dpws.device.remote.OperationReference;
 
 public class DeviceRegistry {
 
+
+	private static final transient Logger logger = Logger
+			.getLogger(DeviceRegistry.class.getName());
+	
 	Map<URI,DeviceRef> knownDevices;
 	
 	public DeviceRegistry(){
@@ -49,55 +41,37 @@ public class DeviceRegistry {
 	private void registerDeviceInternal(URI id, DeviceRef dev){
 		
 		if(knownDevices.containsKey(id)){
-			Logger.getLogger(getClass().getCanonicalName()).info("Ignoring device " + id.toString());
+			logger.info("Ignoring device " + id.toString());
 			return;
 		}
 		knownDevices.put(id, dev);
 
-		Logger.getLogger(getClass().getCanonicalName()).info("Device Discovered:" + dev.toString());
-//				
-//		OperationReference op1 = dev.getService("SomeService").getOperation("OperationOne");
-//		
-//			
-//			
-//			Map<String,String> params = new HashMap<String,String>();
-//					
-//			params.put("K1", "4.2");
-//			params.put("K2", "6.3");
-//			params.put("@lang", "FR");
-//			
-//			XmlObject iobj = op1.getInputParamter(params);
-//			
-//			System.out.println("Invoking OperationOne:");
-//			try {
-//				DPWSXmlUtil.getInstance().writeXml(iobj);
-//				XmlObject oobj = op1.invoke(iobj);
-//
-//				System.out.println("Response:");
-//				DPWSXmlUtil.getInstance().writeXml(oobj);
-//			} catch (JAXBException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (SOAPException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (XmlException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (ParserConfigurationException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (SAXException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+		logger.info("Device Discovered:" + dev.toString());
 
+		// Test Operation Invokation
 		
+//		OperationReference op1 = dev.getService("SomeService").getOperation(
+//				"OperationOne");
+//
+//		Map<String, String> params = new HashMap<String, String>();
+//
+//		params.put("K1", "4.2");
+//		params.put("K2", "6.3");
+//		params.put("@lang", "FR");
+//
+//		XmlObject iobj = op1.getInputParamter(params);
+//
+//		System.out.println("Invoking OperationOne:");
+//		try {
+//			DPWSXmlUtil.getInstance().writeXml(iobj);
+//			XmlObject oobj = op1.invoke(iobj);
+//			System.out.println("Response:");
+//			DPWSXmlUtil.getInstance().writeXml(oobj);
+//		} catch (Exception ex) {
+//			logger.log(Level.SEVERE, "Error invoking OperationOne", ex);
+//		}
+
 	}
-	
 	
 	public DeviceRef getDevice(URI id){
 		return knownDevices.get(id);
@@ -116,5 +90,6 @@ public class DeviceRegistry {
 	
 	public void reportBye(ByeType bye){
 		 reportBye(bye.getEndpointReference().getAddress().getValue());
+		 logger.info("Bye Message Recieved from " + bye.getEndpointReference().getAddress().getValue());
 	}
 }

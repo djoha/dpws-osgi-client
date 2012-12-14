@@ -110,11 +110,13 @@ public class OperationReference {
 		SOAPMessage msg = DPWSMessageFactory.getInputMessage(getInputAction(), parentService.getAddress().toString());
 		
 		if(!parentService.getTypeHandler().validate(input)){
-//			throw new XmlException("Invalid Input Message. Check Logs.");
+			throw new XmlException("Validation failed. Check Logs.");
 		}
 				
 		Node n = msg.getSOAPPart().importNode(input.getDomNode(),true);
 		msg.getSOAPBody().appendChild(n);
+
+		logInfo("Invoked.");
 		
 		SOAPMessage outMessage = conn.call(msg, parentService.getAddress().toString());
 		return parentService.getTypeHandler().unmarshal(outMessage.getSOAPBody().extractContentAsDocument(),outputElement);
@@ -164,5 +166,8 @@ public class OperationReference {
 		this.setOutputAction(outputAction);
 	}
 	
+	private void logInfo(String msg){
+		logger.info(String.format("[Operation %s] - %s", getName(), msg));
+	}
 	
 }
