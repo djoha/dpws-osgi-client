@@ -127,14 +127,12 @@ public class DpwsClient implements IDpwsClient{
 		registry.registerDevice(matches);
 	}
 	
-	
 	public void messageReceived(Exchange message) throws SOAPException, IOException{
 		System.out.println("Some Message:");
 		SOAPMessage msg = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
 		msg.writeTo(System.out);
 		System.out.flush();
 	}
-
 
 	@Override
 	public void dpwsScan() {

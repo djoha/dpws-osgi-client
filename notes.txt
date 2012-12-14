@@ -6,14 +6,13 @@ Client Side
 Subscription Management
 Subscription Expiry, renewal, auto-renewal
 OSGi Device/Service Management Interface
-Browser Interface (jquery UI ? )
+Browser Interface (jquery UI ? reuse old version? )
 WS-Discovery Device Resolve/ResolveMatch
 Adding directly (no Probe)
 Adding service from WSDL
 Dynamic event-routing approach
 Drools Integration test
-
-
+Maybe: DPWS Discovery Proxy functionality
 
 Device Side
 DeviceManager, local Device Registry
