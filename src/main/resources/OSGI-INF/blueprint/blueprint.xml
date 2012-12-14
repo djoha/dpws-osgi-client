@@ -59,6 +59,12 @@
 				</otherwise>
 			</choice>
 		</route>
+		
+	<!-- 	Event Endpoint -->
+		  <route>
+			<from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}"/>
+			<bean ref="client" method="eventReceived"/>
+		</route>
 	</camelContext>
 
 	<cm:property-placeholder persistent-id="fi.tut.fast.dpws.dpwsosgiclient">
@@ -77,7 +83,7 @@
 		destroy-method="destroy">
 		<property name="someProperty" value="${some.property}" />
 		<!-- <property name="probeMatchEndpointAddress" value="udp://${host}:${probematch.listen.port}/wsd"/> -->
-		<property name="probeMatchEndpointAddress" value="http://${host}:${port}/${eventSinkPath}" />
+		<property name="defaultEventSink" value="http://${host}:${port}/${eventSinkPath}" />
 		<property name="context" ref="blueprintBundleContext" />
 	</bean>
 

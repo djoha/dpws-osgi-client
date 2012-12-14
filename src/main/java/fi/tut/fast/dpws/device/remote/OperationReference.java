@@ -2,6 +2,7 @@ package fi.tut.fast.dpws.device.remote;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBException;
@@ -12,7 +13,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
@@ -20,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xmlsoap.schemas.eventing.SubscribeResponse;
 
 import fi.tut.fast.dpws.DPWSConstants;
 import fi.tut.fast.dpws.DpwsClient;
@@ -103,6 +107,30 @@ public class OperationReference {
 		return parentService.getTypeHandler().populateElement(faultElement, values);
 	}
 	
+	public String subscribe(String listenerEndpoint) throws SOAPException, XPathExpressionException, XMLStreamException{
+
+		String refId = DPWSMessageFactory.newUUID();
+		
+		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
+		SOAPMessage msg = DPWSMessageFactory.getSubscribeMessage(getOutputAction(),
+												parentService.getAddress().toString(),
+												listenerEndpoint,
+												refId);
+		SOAPMessage resp = conn.call(msg, parentService.getAddress().toString());
+		
+		try {
+			SubscribeResponse subResp = (SubscribeResponse)DPWSXmlUtil.getInstance().unmarshalSoapBody(resp);
+		} catch (Exception e) {
+			logError("Failed to unmarshal SubscriptionResponse",e);
+		}
+		
+		String refIdOut = DPWSXmlUtil.extractReferenceParam(resp);
+		
+		logInfo("Subscribed.  Reference: " + refIdOut );
+		
+		return refIdOut;
+		
+	}
 	
 	public XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException{
 		
@@ -168,6 +196,10 @@ public class OperationReference {
 	
 	private void logInfo(String msg){
 		logger.info(String.format("[Operation %s] - %s", getName(), msg));
+	}
+	
+	private void logError(String msg, Throwable e){
+		logger.log(Level.SEVERE,String.format("[Operation %s] - %s", getName(), msg),e);
 	}
 	
 }

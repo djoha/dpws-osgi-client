@@ -23,15 +23,22 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.camel.Exchange;
 import org.apache.xmlbeans.SchemaGlobalElement;
@@ -192,6 +199,21 @@ public class DPWSXmlUtil {
 		return defProfFactory.createHosted(hosted);
 	}
 
+    private static XPathFactory xfactory;
+    public static String extractReferenceParam(SOAPMessage subscriptionResponse) throws XPathExpressionException, XMLStreamException, SOAPException{
+
+        if(xfactory == null){
+        	xfactory = XPathFactory.newInstance();
+        }
+        XPath path = xfactory.newXPath();
+        NamespaceContext ctx = new UniversalNamespaceResolver(subscriptionResponse.getSOAPPart());
+        path.setNamespaceContext(ctx);
+        String expr = "/s12:Envelope/s12:Body/wse:SubscribeResponse/wse:SubscriptionManager/wsa:ReferenceParameters/wse:Identifier";
+        XPathExpression expression = path.compile(expr);
+        return (String) expression.evaluate((Node)subscriptionResponse.getSOAPPart(),XPathConstants.STRING);
+
+    }
+	
 	public Object unwrap(Object o) {
 		if (o instanceof JAXBElement) {
 			return ((JAXBElement) o).getValue();
@@ -947,6 +969,9 @@ public class DPWSXmlUtil {
 			c.toLastChild();
 		}
 	}
+	
+	
+	
 
 //	public class TypeHandlerOld {
 //

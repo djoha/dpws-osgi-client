@@ -33,6 +33,7 @@ public class DpwsClient implements IDpwsClient{
 	private String someProperty = "thing";
 	private String probeMatchEndpointAddress;
 	private BundleContext context;
+	private String defaultEventSink;
 	
 	@Produce(uri="direct:discoveryProbe")
 	Prober p;
@@ -74,6 +75,16 @@ public class DpwsClient implements IDpwsClient{
 	}
 
 
+	public String getDefaultEventSink() {
+		return defaultEventSink;
+	}
+
+
+	public void setDefaultEventSink(String defaultEventSink) {
+		this.defaultEventSink = defaultEventSink;
+	}
+
+
 	public void destroy() throws Exception {
     	logger.info("OSGi Bundle Stopping.");
 	}
@@ -86,6 +97,12 @@ public class DpwsClient implements IDpwsClient{
     
     	dpwsScan();
     	
+	}
+	
+	public void eventReceived(Exchange message) throws IOException, SOAPException{
+		SOAPMessage event = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
+		System.out.println("Event received: ");
+		event.writeTo(System.out);
 	}
 
 	public void helloReceived(Exchange message) throws Exception{
@@ -124,7 +141,7 @@ public class DpwsClient implements IDpwsClient{
 		
     	try {
         	ByteArrayOutputStream probe = new ByteArrayOutputStream(DPWSConstants.WSD_PROBE_MAX_SIZE);
-			DPWSMessageFactory.getDiscoveryProbe(probeMatchEndpointAddress).writeTo(probe);
+			DPWSMessageFactory.getDiscoveryProbe().writeTo(probe);
 	    	p.sendProbe(probe.toByteArray());
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to send Probe.", e);

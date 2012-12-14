@@ -6,12 +6,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.xmlbeans.XmlObject;
 import org.xmlsoap.schemas.discovery.ByeType;
 import org.xmlsoap.schemas.discovery.HelloType;
 import org.xmlsoap.schemas.discovery.ProbeMatchType;
 import org.xmlsoap.schemas.discovery.ProbeMatchesType;
 
 import fi.tut.fast.dpws.device.remote.DeviceRef;
+import fi.tut.fast.dpws.device.remote.OperationReference;
 
 public class DeviceRegistry {
 
@@ -50,26 +52,32 @@ public class DeviceRegistry {
 
 		// Test Operation Invokation
 		
-//		OperationReference op1 = dev.getService("SomeService").getOperation(
-//				"OperationOne");
-//
-//		Map<String, String> params = new HashMap<String, String>();
-//
-//		params.put("K1", "4.2");
-//		params.put("K2", "6.3");
-//		params.put("@lang", "FR");
-//
-//		XmlObject iobj = op1.getInputParamter(params);
-//
-//		System.out.println("Invoking OperationOne:");
-//		try {
-//			DPWSXmlUtil.getInstance().writeXml(iobj);
-//			XmlObject oobj = op1.invoke(iobj);
-//			System.out.println("Response:");
-//			DPWSXmlUtil.getInstance().writeXml(oobj);
-//		} catch (Exception ex) {
-//			logger.log(Level.SEVERE, "Error invoking OperationOne", ex);
-//		}
+		OperationReference op1 = dev.getService("SomeService").getOperation(
+				"OperationOne");
+
+		OperationReference ev1 = dev.getService("SomeService").getOperation(
+				"somethingElseHappened");
+		
+		
+		
+		Map<String, String> params = new HashMap<String, String>();
+
+		params.put("K1", "4.2");
+		params.put("K2", "6.3");
+		params.put("@lang", "FR");
+
+		XmlObject iobj = op1.getInputParamter(params);
+
+		System.out.println("Invoking OperationOne:");
+		try {
+			String refNum = ev1.subscribe("http://192.168.2.135:8808/esink");
+			DPWSXmlUtil.getInstance().writeXml(iobj);
+			XmlObject oobj = op1.invoke(iobj);
+			System.out.println("Response:");
+			DPWSXmlUtil.getInstance().writeXml(oobj);
+		} catch (Exception ex) {
+			logger.log(Level.SEVERE, "Error invoking OperationOne", ex);
+		}
 
 	}
 	
