@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
+import javax.xml.namespace.QName;
 
 import org.xmlsoap.schemas.devprof.DeviceMetadataDialectURIs;
 import org.xmlsoap.schemas.devprof.DeviceRelationshipTypeURIs;
@@ -17,6 +18,12 @@ import org.xmlsoap.schemas.devprof.LocalizedStringType;
 import org.xmlsoap.schemas.devprof.Relationship;
 import org.xmlsoap.schemas.devprof.ThisDeviceType;
 import org.xmlsoap.schemas.devprof.ThisModelType;
+import org.xmlsoap.schemas.discovery.ByeType;
+import org.xmlsoap.schemas.discovery.HelloType;
+import org.xmlsoap.schemas.discovery.ProbeMatchType;
+import org.xmlsoap.schemas.discovery.ProbeMatchesType;
+import org.xmlsoap.schemas.discovery.ProbeType;
+import org.xmlsoap.schemas.discovery.ScopesType;
 import org.xmlsoap.schemas.mex.Metadata;
 import org.xmlsoap.schemas.mex.MetadataSection;
 
@@ -26,6 +33,13 @@ import fi.tut.fast.dpws.utils.LocalizedTextMap;
 
 public class Device {
 
+	
+	protected URI id;
+	protected List<String> xAddrs;
+	protected ScopesType scopes;
+	protected long metadataVersion;
+	protected List<QName> types;
+	
 	LocalizedTextMap manufacturers = new LocalizedTextMap();
 	LocalizedTextMap friendlyNames = new LocalizedTextMap();
 	LocalizedTextMap modelNames = new LocalizedTextMap();
@@ -151,6 +165,91 @@ public class Device {
 		this.presentationUrl = presentationUrl;
 	}
 
+	public ProbeMatchesType createProbeMatches() throws JAXBException{
+		
+		ProbeMatchType match = new ProbeMatchType();
+		match.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
+		match.setMetadataVersion(metadataVersion);
+		for(String addr : xAddrs){
+			match.addXAddrs(addr);
+		}
+		for(QName type : types){
+			match.addType(type);
+		}
+		match.setScopes(scopes);
+		
+		ProbeMatchesType pms = new ProbeMatchesType();
+		pms.addProbeMatch(match);
+		return pms;
+	}
+	
+	
+	public ProbeMatchType createProbeMatch(ProbeType probe) throws JAXBException{
+		List<QName> probeTypes= probe.getTypes();
+		//ScopesType scopes= probe.getScopes();  TODO SCOPES
+		
+		if(probeTypes.isEmpty()){
+			return createProbeMatch();
+		}
+		
+		for(QName pt : probeTypes){
+			if(types.contains(pt)){
+				return createProbeMatch();
+			}
+		}
+		
+		return null;
+	}
+	
+	public ProbeMatchType createProbeMatch() throws JAXBException{
+		
+		ProbeMatchType pm =  new ProbeMatchType();
+		pm.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
+		pm.setMetadataVersion(metadataVersion);
+		pm.setScopes(scopes);
+		for(QName type : types){
+			pm.addType(type);
+		}
+		for(String xaddr : xAddrs){
+			pm.addXAddrs(xaddr);
+		}
+		
+		return pm;
+	}
+	
+	public HelloType createHello() throws JAXBException{
+		
+		HelloType hello = new HelloType();
+		hello.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
+		hello.setMetadataVersion(metadataVersion);
+		for(String addr : xAddrs){
+			hello.addXAddrs(addr);
+		}
+		for(QName type : types){
+			hello.addType(type);
+		}
+		hello.setScopes(scopes);
+		return hello;
+	}	
+	
+	public ByeType createBye() throws JAXBException{
+		
+		ByeType ht =  new ByeType();
+		ht.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
+		ht.setMetadataVersion(metadataVersion);
+		ht.setScopes(scopes);
+		for(QName type : types){
+			ht.addType(type);
+		}
+		for(String xaddr : xAddrs){
+			ht.addXAddrs(xaddr);
+		}
+		
+		return ht;
+	}
+	
+	
+	
 	public Metadata getDeviceMetadata() throws JAXBException{
 		
 		// Object Factories

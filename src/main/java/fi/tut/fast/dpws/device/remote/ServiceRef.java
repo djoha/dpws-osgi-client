@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,7 +16,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPConnection;
@@ -30,8 +28,8 @@ import org.xmlsoap.schemas.devprof.HostServiceType;
 import org.xmlsoap.schemas.mex.Metadata;
 import org.xmlsoap.schemas.mex.MetadataSection;
 import org.xmlsoap.schemas.wsdl.TDefinitions;
-import org.xmlsoap.schemas.wsdl.TMessage;
 import org.xmlsoap.schemas.wsdl.TOperation;
+import org.xmlsoap.schemas.wsdl.TPart;
 import org.xmlsoap.schemas.wsdl.TTypes;
 import org.xmlsoap.schemas.wsdl.TOperation.OperationParameter;
 import org.xmlsoap.schemas.wsdl.TPortType;
@@ -165,15 +163,29 @@ public class ServiceRef extends Service {
 
 				QName msg = op.getMessageQName(OperationParameter.input);
 				if(msg != null){
-					 input = wsdl.getMessage(msg).getPart().get(0).getElement();
+					 List<TPart> parts = wsdl.getMessage(msg).getPart();
+					 if(parts.isEmpty()){
+						 input = DPWSConstants.EMPTY_MESSAGE_QNAME;
+					 }else{
+						 input = parts.get(0).getElement();
+					 }
 				}
 				msg = op.getMessageQName(OperationParameter.output);
 				if(msg != null){
-					output =  wsdl.getMessage(msg).getPart().get(0).getElement();
-				}
+					 List<TPart> parts = wsdl.getMessage(msg).getPart();
+					 if(parts.isEmpty()){
+						 output = DPWSConstants.EMPTY_MESSAGE_QNAME;
+					 }else{
+						 output = parts.get(0).getElement();
+					 }				}
 				msg = op.getMessageQName(OperationParameter.fault);
 				if(msg != null){
-					fault =  wsdl.getMessage(msg).getPart().get(0).getElement();
+					 List<TPart> parts = wsdl.getMessage(msg).getPart();
+					 if(parts.isEmpty()){
+						 fault = DPWSConstants.EMPTY_MESSAGE_QNAME;
+					 }else{
+						 fault = parts.get(0).getElement();
+					 }			
 				}
 				
 

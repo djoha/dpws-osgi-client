@@ -69,4 +69,14 @@ public class TBindingOperationMessage
         this.name = value;
     }
 
+    
+    // Convenience
+    public TBindingOperationMessage(){
+    	
+    }
+    
+    public TBindingOperationMessage(String name){
+    	this.name = name;
+    }
+    
 }

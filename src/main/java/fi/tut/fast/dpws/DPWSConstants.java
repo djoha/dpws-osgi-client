@@ -83,7 +83,8 @@ public class DPWSConstants {
 	public static final String OUTPUT_ACTION_SUFFIX = "Response";
 	public static final String INPUT_ACTION_SUFFIX = "Request";
 	
-    
+    public static final QName EMPTY_MESSAGE_QNAME = new QName("EMPTY_MESSAGE","EMPTY_MESSAGE");
+	
     private DPWSConstants(){}
     
 }

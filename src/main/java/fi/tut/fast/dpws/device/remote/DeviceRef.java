@@ -41,14 +41,7 @@ import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 public class DeviceRef extends Device{
 
     private static final transient Logger logger = Logger.getLogger(DpwsClient.class.getName());
-	
-	URI id;
-	List<String> xAddrs;
-	ScopesType scopes;
-	long metadataVersion;
-	List<QName> types;
-	
-	
+
 	private SOAPConnection conn;
 	
 //	<wsdp:Manufacturer xml:lang="en">Inico
@@ -78,7 +71,7 @@ public class DeviceRef extends Device{
 		xAddrs = hello.getXAddrs();
 		types = hello.getTypes();
 		status = Status.DISCOVERED;
-		
+		scopes = hello.getScopes();
 		init();
 		updateRemoteDeviceMetadata();
 		
@@ -123,71 +116,7 @@ public class DeviceRef extends Device{
 		}
 	}
 	
-	public ProbeMatchType createProbeMatch(ProbeType probe) throws JAXBException{
-		List<QName> probeTypes= probe.getTypes();
-		//ScopesType scopes= probe.getScopes();  TODO SCOPES
-		
-		if(probeTypes.isEmpty()){
-			return createProbeMatch();
-		}
-		
-		for(QName pt : probeTypes){
-			if(types.contains(pt)){
-				return createProbeMatch();
-			}
-		}
-		
-		return null;
-	}
-	
-	public ProbeMatchType createProbeMatch() throws JAXBException{
-		
-		ProbeMatchType pm =  new ProbeMatchType();
-		pm.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
-		pm.setMetadataVersion(metadataVersion);
-		pm.setScopes(scopes);
-		for(QName type : types){
-			pm.addType(type);
-		}
-		for(String xaddr : xAddrs){
-			pm.addXAddrs(xaddr);
-		}
-		
-		return pm;
-	}
-	
-	public HelloType createHello() throws JAXBException{
-		
-		HelloType ht =  new HelloType();
-		ht.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
-		ht.setMetadataVersion(metadataVersion);
-		ht.setScopes(scopes);
-		for(QName type : types){
-			ht.addType(type);
-		}
-		for(String xaddr : xAddrs){
-			ht.addXAddrs(xaddr);
-		}
-		
-		return ht;
-	}	
-	
-	public ByeType createBye() throws JAXBException{
-		
-		ByeType ht =  new ByeType();
-		ht.setEndpointReference(DPWSXmlUtil.getInstance().createEndpointReference(id));
-		ht.setMetadataVersion(metadataVersion);
-		ht.setScopes(scopes);
-		for(QName type : types){
-			ht.addType(type);
-		}
-		for(String xaddr : xAddrs){
-			ht.addXAddrs(xaddr);
-		}
-		
-		return ht;
-	}
-	
+
 	
 	
 	public void reportBye(){

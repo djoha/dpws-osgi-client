@@ -908,6 +908,9 @@ public class DPWSXmlUtil {
 		}
 
 		public XmlObject getElementTemplate(QName name) {
+			if(name == DPWSConstants.EMPTY_MESSAGE_QNAME){
+				return XmlObject.Factory.newInstance();
+			}
 			XmlObject obj = buildElement(name, stl);
 			return obj;
 		}
@@ -917,6 +920,11 @@ public class DPWSXmlUtil {
 		}
 		
 		public XmlObject getEmptyElement(QName name) {
+			
+			if(name == DPWSConstants.EMPTY_MESSAGE_QNAME){
+				return XmlObject.Factory.newInstance();
+			}
+			
 			SchemaGlobalElement el = stl.findElement(name);
 			XmlObject obj = stl.newInstance(el.getType(), new XmlOptions()
 					.setSavePrettyPrint().setSavePrettyPrintIndent(4));
@@ -967,6 +975,11 @@ public class DPWSXmlUtil {
 		public void addChildElement(XmlObject obj, QName name, String value) {
 			XmlCursor c = obj.newCursor();
 			c.toLastChild();
+		}
+		
+		public void getElementType(QName name){
+			
+			
 		}
 	}
 	

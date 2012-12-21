@@ -20,6 +20,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.xpath.XPathExpressionException;
 
+import org.apache.xmlbeans.SchemaType;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.w3c.dom.Document;
@@ -30,33 +31,26 @@ import org.xmlsoap.schemas.eventing.SubscribeResponse;
 
 import fi.tut.fast.dpws.DPWSConstants;
 import fi.tut.fast.dpws.DpwsClient;
+import fi.tut.fast.dpws.device.Operation;
 import fi.tut.fast.dpws.utils.DPWSCommunication;
 import fi.tut.fast.dpws.utils.DPWSMessageFactory;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil.TypeHandler;
 
-public class OperationReference {
+public class OperationReference extends Operation{
 
     private static final transient Logger logger = Logger.getLogger(DpwsClient.class.getName());
-	
-	String name;
-	String namespace;
+
 	ServiceRef parentService;
-	String inputAction;
-	String outputAction;
-	QName portType;
-	
-	QName inputElement;
-	QName outputElement;
-	QName faultElement;
-	
-	List<String> subscriptionIds;
-	
 	
 	boolean event = false;
 	
 	public OperationReference(String name, QName portType ,  ServiceRef parentService, QName inputElement, QName outputElement, QName faultElement){
 
+		hasInput = (inputElement != null);
+		hasOutput = (outputElement != null);
+		hasFault = (faultElement != null);
+		
 		this.inputElement = inputElement;
 		this.outputElement = outputElement;
 		this.faultElement = faultElement;
@@ -79,43 +73,8 @@ public class OperationReference {
 		 this( name, portType, parentService, inputElement, outputElement, null);
 	}
 
-	public XmlObject getInputParamter(){
-		return parentService.getTypeHandler().getElementTemplate(inputElement);
-	}
-
-	public XmlObject getOutputParameter(){
-		return parentService.getTypeHandler().getElementTemplate(outputElement);
-	}
-
-	public XmlObject getFaultParamter(){
-		return parentService.getTypeHandler().getElementTemplate(faultElement);
-	}
-
-	public XmlObject getInputParamter(String value){
-		return parentService.getTypeHandler().populateElement(inputElement, value);
-	}
-
-	public XmlObject getOutputParameter(String value){
-		return parentService.getTypeHandler().populateElement(outputElement, value);
-	}
-
-	public XmlObject getFaultParamter(String value){
-		return parentService.getTypeHandler().populateElement(faultElement, value);
-	}
-	
-	public XmlObject getInputParamter(Map<String,String> values){
-		return parentService.getTypeHandler().populateElement(inputElement, values);
-	}
-
-	public XmlObject getOutputParameter(Map<String,String> values){
-		return parentService.getTypeHandler().populateElement(outputElement, values);
-	}
-
-	public XmlObject getFaultParamter(Map<String,String> values){
-		return parentService.getTypeHandler().populateElement(faultElement, values);
-	}
-	
-	public String subscribe(String listenerEndpoint) throws SOAPException, XPathExpressionException, XMLStreamException{
+	@Override
+	public String subscribe(String listenerEndpoint) throws SOAPException, XMLStreamException{
 
 		String refId = DPWSMessageFactory.newUUID();
 		
@@ -139,7 +98,8 @@ public class OperationReference {
 		return null;
 
 	}
-	
+
+	@Override
 	public void unsubscribe(String refId) throws SOAPException{
 		
 		subscriptionIds.remove(refId);
@@ -151,7 +111,7 @@ public class OperationReference {
 		logInfo("Unsubscribed.  Reference: " + refId );
 		
 	}
-	
+
 	public void unsubscribeAll() throws SOAPException{
 		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
 		for(String refId : subscriptionIds){
@@ -161,7 +121,8 @@ public class OperationReference {
 		logInfo("Unsibscribed from the following: " + Arrays.toString(subscriptionIds.toArray(new String[]{})));
 		subscriptionIds.clear();
 	}
-	
+
+	@Override
 	public XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException{
 		
 		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
@@ -180,56 +141,11 @@ public class OperationReference {
 		return parentService.getTypeHandler().unmarshal(outMessage.getSOAPBody().extractContentAsDocument(),outputElement);
 		
 	}
-	
-	//
-	
-	public String getName(){
-		return name;
-	}
-	
-	public String getInputAction(){
-		if(isEvent()){
-			return null;
-		}
-		if(inputAction != null){
-			return inputAction;
-		}
-		return String.format("%s/%s/%s%s",
-					portType.getNamespaceURI(),
-					portType.getLocalPart(),
-					name,
-					DPWSConstants.INPUT_ACTION_SUFFIX);
-	}
-	
-	public String getOutputAction(){
-		if(outputAction != null){
-			return outputAction;
-		}
-		return String.format("%s/%s/%s%s",
-				portType.getNamespaceURI(),
-				portType.getLocalPart(),
-				name,
-				isEvent() ? "" : DPWSConstants.OUTPUT_ACTION_SUFFIX);
-	}
-	
-	public boolean isEvent(){
-		return event;
-	}
-	
-	public void setInputAction(String inputAction){
-		this.inputAction = inputAction;
-	}
-	
-	public void setOutputAction(String outputAction){
-		this.setOutputAction(outputAction);
-	}
-	
-	private void logInfo(String msg){
-		logger.info(String.format("[Operation %s] - %s", getName(), msg));
-	}
-	
-	private void logError(String msg, Throwable e){
-		logger.log(Level.SEVERE,String.format("[Operation %s] - %s", getName(), msg),e);
+
+	@Override
+	public List<SchemaType> getTypes() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

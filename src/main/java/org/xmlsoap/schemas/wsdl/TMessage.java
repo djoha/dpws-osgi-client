@@ -115,7 +115,9 @@ public class TMessage
     
     public TMessage(String name, QName element){
     	setName(name);
-    	addPart(new TPart(name + "Part", element));
+    	if(element != null){
+    		addPart(new TPart(name + "Part", element));
+    	}
     }
     
     public void addPart(TPart part){

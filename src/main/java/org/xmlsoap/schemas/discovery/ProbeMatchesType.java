@@ -134,4 +134,9 @@ public class ProbeMatchesType {
         return otherAttributes;
     }
 
+    
+    public void addProbeMatch(ProbeMatchType pm){
+    	getProbeMatch().add(pm);
+    }
+    
 }

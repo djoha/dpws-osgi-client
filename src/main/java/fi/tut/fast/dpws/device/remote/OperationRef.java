@@ -1,8 +1,8 @@
 package fi.tut.fast.dpws.device.remote;
 
-import fi.tut.fast.dpws.device.Operation;
+import fi.tut.fast.dpws.device.OperationJAX;
 
-public class OperationRef<I, O, F> extends Operation<I, O, F> {
+public class OperationRef<I, O, F> extends OperationJAX<I, O, F> {
 
 	
 	public OperationRef(String name, String namespace, Class<I> iClazz,

@@ -160,4 +160,18 @@ public class TBindingOperation
         this.name = value;
     }
 
+    //Convenience
+    public TBindingOperation(){
+    	
+    }
+    
+    public TBindingOperation(String name){
+    	this.name = name;
+    }
+    
+    
+    public void addFault(TBindingOperationFault fault){
+    	getFault().add(fault);
+    }
+    
 }
