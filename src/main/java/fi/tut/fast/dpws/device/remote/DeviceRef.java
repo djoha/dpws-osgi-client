@@ -61,11 +61,19 @@ public class DeviceRef extends Device{
 	
 	public Status status = Status.UNKNOWN;
 
-	public DeviceRef() {
+	protected DeviceRef() {
 
 	}
+	
+	public static DeviceRef fromHello(HelloType hello){
+		return new DeviceRef(hello);
+	}
+	
+	public static DeviceRef fromProbeMatch(ProbeMatchType pm){
+		return new DeviceRef(pm);
+	}
 
-	public DeviceRef(HelloType hello) {
+	private DeviceRef(HelloType hello) {
 		id = hello.getEndpointReference().getAddress().getValue();
 		metadataVersion = hello.getMetadataVersion();
 		xAddrs = hello.getXAddrs();
@@ -74,11 +82,9 @@ public class DeviceRef extends Device{
 		scopes = hello.getScopes();
 		init();
 		updateRemoteDeviceMetadata();
-		
-		
 	}
 
-	public DeviceRef(ProbeMatchType pm) {
+	private DeviceRef(ProbeMatchType pm) {
 		id = pm.getEndpointReference().getAddress().getValue();
 		metadataVersion = pm.getMetadataVersion();
 		xAddrs = pm.getXAddrs();
