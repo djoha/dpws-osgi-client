@@ -26,10 +26,12 @@ public class DPWSConstants {
 	public static final int WS_DISCOVERY_SOCKET_TIMEOUT = 500; // MS
 	public static final int WSD_PROBE_MAX_SIZE = 1024;
     
-
+	public static final String WSD_NAMESPACE = "http://schemas.xmlsoap.org/ws/2005/04/discovery";
+	public static final String WSD_PREFIX = "wsd";
     public static final String WSD_DISCOVERY_PROBE = "urn:schemas-xmlsoap-org:ws:2005:04:discovery";
     public static final String WSD_PROBE_ACTION = "http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe";
     public static final String WSD_PROBE_MATCH_ACTION = "http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe";
+    public static final QName WSD_PROBE_ELEMENT_QNAME = new QName(WSD_NAMESPACE,"Probe",WSD_PREFIX);
     
     // WS-Addressing
     
@@ -85,6 +87,22 @@ public class DPWSConstants {
 	
     public static final QName EMPTY_MESSAGE_QNAME = new QName("EMPTY_MESSAGE","EMPTY_MESSAGE");
 	
+    
+    // From DPWS Appendix D
+    public static final int APP_MAX_DELAY = 5000 ;
+    public static final int DISCOVERY_PORT = 3702;
+    public static final int MATCH_TIMEOUT = 10 ;
+    public static final int MAX_ENVELOPE_SIZE = 32767 ;
+    public static final int MAX_FIELD_SIZE = 256 ;
+    public static final int MAX_URI_SIZE = 2048 ;
+    public static final int MULTICAST_UDP_REPEAT = 2;
+    public static final int UDP_MAX_DELAY = 250 ;
+    public static final int UDP_MIN_DELAY = 50 ;
+    public static final int UDP_UPPER_DELAY = 450 ;
+    public static final int UNICAST_UDP_REPEAT = 2;
+
+    
+    
     private DPWSConstants(){}
     
 }

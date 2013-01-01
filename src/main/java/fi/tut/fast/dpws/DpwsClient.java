@@ -139,7 +139,14 @@ public class DpwsClient implements IDpwsClient{
 		
     	try {
         	ByteArrayOutputStream probe = new ByteArrayOutputStream(DPWSConstants.WSD_PROBE_MAX_SIZE);
-			DPWSMessageFactory.getDiscoveryProbe().writeTo(probe);
+			SOAPMessage env = DPWSMessageFactory.getDiscoveryProbe();
+			env.getSOAPBody().addBodyElement(DPWSConstants.WSD_PROBE_ELEMENT_QNAME);
+			env.writeTo(probe);
+//			
+//			System.out.println("Client Sending probe: ");
+//			env.writeTo(System.out);
+//			System. out.println("\n");
+//			
 	    	p.sendProbe(probe.toByteArray());
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to send Probe.", e);

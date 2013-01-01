@@ -30,13 +30,13 @@ public class DeviceRegistry {
 	// Adding DeviceRef
 	public void registerDevice(HelloType hello){
 		URI id = hello.getEndpointReference().getAddress().getValue();
-		registerDeviceInternal(id, new DeviceRef(hello));
+		registerDeviceInternal(id, DeviceRef.fromHello(hello));
 	}
 	
 	public void registerDevice(ProbeMatchesType matches){
 		for(ProbeMatchType pm :  matches.getProbeMatch()){
 			URI id = pm.getEndpointReference().getAddress().getValue();
-			registerDeviceInternal(id, new DeviceRef(pm));
+			registerDeviceInternal(id, DeviceRef.fromProbeMatch(pm));
 		}
 	}
 	
@@ -49,35 +49,35 @@ public class DeviceRegistry {
 		knownDevices.put(id, dev);
 
 		logger.info("Device Discovered:" + dev.toString());
-
-		// Test Operation Invokation
-		
-		OperationReference op1 = dev.getService("SomeService").getOperation(
-				"OperationOne");
-
-		OperationReference ev1 = dev.getService("SomeService").getOperation(
-				"somethingElseHappened");
-		
-		
-		
-		Map<String, String> params = new HashMap<String, String>();
-
-		params.put("K1", "4.2");
-		params.put("K2", "6.3");
-		params.put("@lang", "FR");
-
-		XmlObject iobj = op1.getInputParamter(params);
-
-		System.out.println("Invoking OperationOne:");
-		try {
-			String refNum = ev1.subscribe("http://192.168.2.135:8808/esink");
-			DPWSXmlUtil.getInstance().writeXml(iobj);
-			XmlObject oobj = op1.invoke(iobj);
-			System.out.println("Response:");
-			DPWSXmlUtil.getInstance().writeXml(oobj);
-		} catch (Exception ex) {
-			logger.log(Level.SEVERE, "Error invoking OperationOne", ex);
-		}
+//
+//		// Test Operation Invokation
+//		
+//		OperationReference op1 = dev.getService("SomeService").getOperation(
+//				"OperationOne");
+//
+//		OperationReference ev1 = dev.getService("SomeService").getOperation(
+//				"somethingElseHappened");
+//		
+//		
+//		
+//		Map<String, String> params = new HashMap<String, String>();
+//
+//		params.put("K1", "4.2");
+//		params.put("K2", "6.3");
+//		params.put("@lang", "FR");
+//
+//		XmlObject iobj = op1.getInputParamter(params);
+//
+//		System.out.println("Invoking OperationOne:");
+//		try {
+//			String refNum = ev1.subscribe("http://192.168.2.135:8808/esink");
+//			DPWSXmlUtil.getInstance().writeXml(iobj);
+//			XmlObject oobj = op1.invoke(iobj);
+//			System.out.println("Response:");
+//			DPWSXmlUtil.getInstance().writeXml(oobj);
+//		} catch (Exception ex) {
+//			logger.log(Level.SEVERE, "Error invoking OperationOne", ex);
+//		}
 
 	}
 	

@@ -30,7 +30,7 @@
 						'Header']/*[local-name() =
 						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe']
 					</xpath>
-					<bean ref="client" method="probeReceived" />
+					<bean ref="deviceManager" method="probeReceived" />
 				</when>
 				<otherwise>
 					<bean ref="client" method="messageReceived" />
@@ -61,17 +61,18 @@
 		</route>
 		
 	<!-- 	Event Endpoint -->
-		  <route>
+		<route>
 			<from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}"/>
 			<bean ref="client" method="eventReceived"/>
 		</route>
 	</camelContext>
 
+
 	<cm:property-placeholder persistent-id="fi.tut.fast.dpws.dpwsosgiclient">
 		<cm:default-properties>
 			<cm:property name="some.property" value="someString" />
-			<cm:property name="host" value="192.168.2.135" />
-			<cm:property name="networkInterface" value="en0" />
+			<cm:property name="host" value="192.168.69.106" />
+			<cm:property name="networkInterface" value="en1" />
 			<cm:property name="port" value="8808" />
 			<cm:property name="eventSinkPath" value="esink" />
 			<cm:property name="client.eventSinkPath" value="eventSink" />
@@ -93,6 +94,13 @@
 		<property name="host" value="${host}" />
 	</bean>
 
+	<bean id="deviceManager" class="fi.tut.fast.dpws.utils.DeviceManager"
+		init-method="init" destroy-method="destroy">
+		<property name="networkInterface" value="${networkInterface}" />
+		<property name="host" value="${host}" />
+		<property name="camelContext" ref="dpwsCamelContext"/>
+	</bean>
+	
 	<service id="dpwsClientService" ref="client"
 		interface="fi.tut.fast.dpws.IDpwsClient" auto-export="disabled" />
 

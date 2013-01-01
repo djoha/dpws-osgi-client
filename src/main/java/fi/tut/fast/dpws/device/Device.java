@@ -1,16 +1,19 @@
 package fi.tut.fast.dpws.device;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.namespace.QName;
 
+import org.apache.camel.Exchange;
 import org.xmlsoap.schemas.devprof.DeviceMetadataDialectURIs;
 import org.xmlsoap.schemas.devprof.DeviceRelationshipTypeURIs;
 import org.xmlsoap.schemas.devprof.HostServiceType;
@@ -27,6 +30,7 @@ import org.xmlsoap.schemas.discovery.ScopesType;
 import org.xmlsoap.schemas.mex.Metadata;
 import org.xmlsoap.schemas.mex.MetadataSection;
 
+import fi.tut.fast.dpws.utils.DPWSMessageFactory;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 import fi.tut.fast.dpws.utils.LocalizedTextMap;
 
@@ -35,10 +39,12 @@ public class Device {
 
 	
 	protected URI id;
-	protected List<String> xAddrs;
+	protected List<String> xAddrs = new ArrayList<String>();
 	protected ScopesType scopes;
 	protected long metadataVersion;
-	protected List<QName> types;
+	protected List<QName> types = new ArrayList<QName>();
+	
+	public static final String BEAN_METHOD_NAME = "messageReceived";
 	
 	LocalizedTextMap manufacturers = new LocalizedTextMap();
 	LocalizedTextMap friendlyNames = new LocalizedTextMap();
@@ -55,11 +61,17 @@ public class Device {
 	static org.xmlsoap.schemas.mex.ObjectFactory mexObjFactory;
 	protected Map<String,Service> hostedServices = new HashMap<String,Service>();
 	
-	public Device(){
-		
+	protected Device(){
+		 try {
+			id = new URI(DPWSMessageFactory.newUUID());
+		} catch (URISyntaxException e) {
+			// Won't happen.
+			e.printStackTrace();
+		}
 	}
 	
 	public Device(String fName){
+		this();
 		friendlyNames.put(fName);
 	}
 
@@ -183,6 +195,22 @@ public class Device {
 		return pms;
 	}
 	
+	public ProbeMatchesType createProbeMatches(ProbeType probe) throws JAXBException{
+		List<QName> probeTypes= probe.getTypes();
+		//ScopesType scopes= probe.getScopes();  TODO SCOPES
+		
+		if(probeTypes.isEmpty()){
+			return createProbeMatches();
+		}
+		
+		for(QName pt : probeTypes){
+			if(types.contains(pt)){
+				return createProbeMatches();
+			}
+		}
+		
+		return null;
+	}
 	
 	public ProbeMatchType createProbeMatch(ProbeType probe) throws JAXBException{
 		List<QName> probeTypes= probe.getTypes();
@@ -248,7 +276,10 @@ public class Device {
 		return ht;
 	}
 	
-	
+	public void addXAddrs(String addr) throws URISyntaxException{
+		URI tempUri = new URI(addr);
+		xAddrs.add(addr);
+	}
 	
 	public Metadata getDeviceMetadata() throws JAXBException{
 		
@@ -323,5 +354,11 @@ public class Device {
     	return metadata;
 	}
 	
+	
+	public void messageReceived(Exchange ex){
+		
+		System.out.println("MessageReceived");
+		
+	}
 	
 }
