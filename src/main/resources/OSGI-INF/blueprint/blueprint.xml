@@ -30,10 +30,13 @@
 						'Header']/*[local-name() =
 						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe']
 					</xpath>
-					<bean ref="deviceManager" method="probeReceived" />
+					<multicast>
+						<to uri="log:org.apache.camel.example?level=INFO"/>
+						<bean ref="deviceManager" method="probeReceived" />
+					</multicast>
 				</when>
 				<otherwise>
-					<bean ref="client" method="messageReceived" />
+					<bean ref="deviceManager" method="probeReceived" />
 				</otherwise>
 			</choice>
 		</route>
@@ -55,7 +58,7 @@
 					<bean ref="client" method="probeMatchesReceived" />
 				</when>
 				<otherwise>
-					<bean ref="client" method="messageReceived" />
+					<bean ref="client" method="probeMatchesReceived" />
 				</otherwise>
 			</choice>
 		</route>
@@ -66,13 +69,12 @@
 			<bean ref="client" method="eventReceived"/>
 		</route>
 	</camelContext>
-
-
+	
 	<cm:property-placeholder persistent-id="fi.tut.fast.dpws.dpwsosgiclient">
 		<cm:default-properties>
 			<cm:property name="some.property" value="someString" />
-			<cm:property name="host" value="192.168.69.106" />
-			<cm:property name="networkInterface" value="en1" />
+			<cm:property name="host" value="192.168.2.135" />
+			<cm:property name="networkInterface" value="en0" />
 			<cm:property name="port" value="8808" />
 			<cm:property name="eventSinkPath" value="esink" />
 			<cm:property name="client.eventSinkPath" value="eventSink" />
@@ -83,7 +85,6 @@
 	<bean id="client" class="fi.tut.fast.dpws.DpwsClient" init-method="init"
 		destroy-method="destroy">
 		<property name="someProperty" value="${some.property}" />
-		<!-- <property name="probeMatchEndpointAddress" value="udp://${host}:${probematch.listen.port}/wsd"/> -->
 		<property name="defaultEventSink" value="http://${host}:${port}/${eventSinkPath}" />
 		<property name="context" ref="blueprintBundleContext" />
 	</bean>
@@ -100,9 +101,13 @@
 		<property name="host" value="${host}" />
 		<property name="camelContext" ref="dpwsCamelContext"/>
 	</bean>
+
+	<bean id="deviceCreator" class="fi.tut.fast.dpws.test.DeviceInjector"
+		init-method="init">
+		<property name="manager" ref="deviceManager"/>
+	</bean>
 	
 	<service id="dpwsClientService" ref="client"
 		interface="fi.tut.fast.dpws.IDpwsClient" auto-export="disabled" />
-
 
 </blueprint>

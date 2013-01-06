@@ -37,6 +37,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Produce;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.eclipse.jetty.client.Address;
 import org.xmlsoap.schemas.discovery.ProbeMatchesType;
 import org.xmlsoap.schemas.discovery.ProbeType;
@@ -80,7 +81,6 @@ public class DeviceManager {
 
 	public void init() throws Exception {
 		s = new DatagramSocket(port,getAddress());
-		addDevice(new TestDevice());
 	}
 
 	public void destroy() {
@@ -90,16 +90,16 @@ public class DeviceManager {
 	public void probeReceived(Exchange ex) throws JAXBException,
 			SOAPException, IOException {
 
-		
-		System.out.format("Headers: \n   SourceAddress: %s:%s\n  PacketLength %s\n",
-				ex.getIn().getHeader(MulticastConstants.SOURCE_ADDRESS),
-				ex.getIn().getHeader(MulticastConstants.SOURCE_PORT),
-				ex.getIn().getHeader(MulticastConstants.PACKET_LENGTH));
+//		System.out.format("Headers: \n   SourceAddress: %s:%s\n  PacketLength %s\n",
+//				ex.getIn().getHeader(MulticastConstants.SOURCE_ADDRESS),
+//				ex.getIn().getHeader(MulticastConstants.SOURCE_PORT),
+//				ex.getIn().getHeader(MulticastConstants.PACKET_LENGTH));
 		
 //		SOAPMessage msg = DPWSMessageFactory.recieveMessage(ex.getIn().getBody(InputStream.class));
 //		msg.writeTo(System.out);
-//		
-		ProbeType probe = (ProbeType) DPWSXmlUtil.getInstance().unmarshalSoapBody(ex.getIn().getBody(InputStream.class));
+		
+		System.out.println("Device Manager: Probe Received.");
+		ProbeType probe = (ProbeType) DPWSXmlUtil.getInstance().unmarshalSoapBody(ex);
 		
 		try {
 			URI address = new URI(ex.getIn().getHeader(MulticastConstants.SOURCE_ADDRESS,String.class));
@@ -283,7 +283,7 @@ public class DeviceManager {
 		
 		@Override
 		public void configure() throws Exception {			
-			from("jetty:http://" + host + ":12367/device/" + id).bean(dev, Device.BEAN_METHOD_NAME);
+			from("jetty://http://" + host + ":12367/device/" + id).bean(dev, Device.BEAN_METHOD_NAME);
 		}
 		
 	}

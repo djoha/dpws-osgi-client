@@ -80,7 +80,7 @@
 					<instructions>
 						<Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
 						<Bundle-Description>${project.description}</Bundle-Description>
-						<Import-Package>*,org.w3c.dom</Import-Package>
+						<Import-Package>*,org.w3c.dom,org.apache.camel.component.jetty</Import-Package>
 					</instructions>
 				</configuration>
 			</plugin>

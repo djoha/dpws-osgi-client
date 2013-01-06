@@ -1,4 +1,12 @@
 
+features:install camel-jetty
+osgi:install -s mvn:org.apache.servicemix.bundles/org.apache.servicemix.bundles.commons-io
+osgi:install -s mvn:fi.tut.fast/camel-multicast
+osgi:install -s mvn:fi.tut.fast/dpws-osgi-client
+
+
+
+
 
 TODO:
 

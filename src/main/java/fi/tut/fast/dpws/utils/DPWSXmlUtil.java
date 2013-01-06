@@ -11,6 +11,7 @@ import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -148,8 +149,16 @@ public class DPWSXmlUtil {
 
 	public Object unmarshalSoapBody(SOAPMessage msg) throws JAXBException,
 			SOAPException, IOException {
-		Object obj = unmarshaller.unmarshal(msg.getSOAPBody()
-				.extractContentAsDocument());
+		
+		Object obj = null;
+		try{
+			obj = unmarshaller.unmarshal(msg.getSOAPBody().extractContentAsDocument());
+		}catch(SOAPException ex){
+			NodeList nodes = msg.getSOAPBody().getChildNodes();
+			if(nodes.getLength() > 0){
+				obj = unmarshaller.unmarshal(nodes.item(0));
+			}
+		}
 		if (obj instanceof JAXBElement) {
 			return ((JAXBElement) obj).getValue();
 		}

@@ -119,20 +119,23 @@ public class DpwsClient implements IDpwsClient{
 
 	public void probeReceived(Exchange message) throws SOAPException, IOException, JAXBException{
 		logger.info("Probe Message recieved. Ignoring....");
+		System.out.println("Probe Message recieved. Ignoring....");
 	}
 	
 	public void probeMatchesReceived(Exchange message) throws Exception{
 		ProbeMatchesType matches = (ProbeMatchesType) DPWSXmlUtil.getInstance().unmarshalSoapBody(message);
 		logger.info("Received Probe Matches from " + matches.getProbeMatch().get(0).getEndpointReference().getAddress().getValue());
+		System.out.println("Received Probe Matches from " + matches.getProbeMatch().get(0).getEndpointReference().getAddress().getValue());
 		registry.registerDevice(matches);
 	}
 	
-	public void messageReceived(Exchange message) throws SOAPException, IOException{
-		System.out.println("Some Message:");
-		SOAPMessage msg = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
-		msg.writeTo(System.out);
-		System.out.flush();
-	}
+//	public void messageReceived(Exchange message) throws SOAPException, IOException{
+//		System.out.println("Unknown Message Received:");
+//		SOAPMessage msg = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
+//		msg.writeTo(System.out);
+//		System.out.flush();
+//		System.out.println("");
+//	}
 
 	@Override
 	public void dpwsScan() {
@@ -142,11 +145,11 @@ public class DpwsClient implements IDpwsClient{
 			SOAPMessage env = DPWSMessageFactory.getDiscoveryProbe();
 			env.getSOAPBody().addBodyElement(DPWSConstants.WSD_PROBE_ELEMENT_QNAME);
 			env.writeTo(probe);
-//			
-//			System.out.println("Client Sending probe: ");
-//			env.writeTo(System.out);
-//			System. out.println("\n");
-//			
+			
+			System.out.println("Client Sending probe: ");
+			env.writeTo(System.out);
+			System. out.println("\n");
+
 	    	p.sendProbe(probe.toByteArray());
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to send Probe.", e);
