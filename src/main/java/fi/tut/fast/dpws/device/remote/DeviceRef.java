@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
@@ -104,7 +105,6 @@ public class DeviceRef extends Device{
 		}
 	}
 	
-	
 	public void updateRemoteDeviceMetadata(){
 		try {
 			SOAPMessage metadataMsg = conn.call(DPWSMessageFactory.createGetRequest(getXAddress()), getXAddress());
@@ -121,9 +121,6 @@ public class DeviceRef extends Device{
 			e.printStackTrace();
 		}
 	}
-	
-
-	
 	
 	public void reportBye(){
 		status = Status.BYE_RECIEVED;
@@ -266,4 +263,13 @@ public class DeviceRef extends Device{
 	public Collection<ServiceRef> getServices(){
 		return (Collection)hostedServices.values();
 	}
+	
+	public List<SubscriptionRef> subscribe(String filter, String notifyTo){
+		List<SubscriptionRef> subs = new ArrayList<SubscriptionRef>();
+		for(ServiceRef s : getServices()){
+			subs.addAll(s.subscribe(filter, notifyTo));
+		}
+		return subs;
+	}
+	
 }

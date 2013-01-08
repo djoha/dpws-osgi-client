@@ -60,7 +60,7 @@ public class OperationReference extends Operation{
 
 		event = ( inputElement == null );
 		
-		subscriptionIds = new ArrayList<String>();
+//		subscriptionIds = new ArrayList<String>();
 		
 		logger.info(String.format("%s added: %s", isEvent()? "Event" : "Operation", getName()));
 	}
@@ -73,56 +73,10 @@ public class OperationReference extends Operation{
 		 this( name, portType, parentService, inputElement, outputElement, null);
 	}
 
-	@Override
-	public String subscribe(String listenerEndpoint) throws SOAPException, XMLStreamException{
-
-		String refId = DPWSMessageFactory.newUUID();
-		
-		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
-		SOAPMessage msg = DPWSMessageFactory.getSubscribeMessage(getOutputAction(),
-												parentService.getAddress().toString(),
-												listenerEndpoint,
-												refId);
-		SOAPMessage resp = conn.call(msg, parentService.getAddress().toString());
-		
-		try {
-			SubscribeResponse subResp = (SubscribeResponse)DPWSXmlUtil.getInstance().unmarshalSoapBody(resp);
-			String refIdOut = subResp.getSubscriptionManager().getReferenceParameters().getIdentifier();
-			logInfo("Subscribed.  Reference: " + refIdOut );
-			subscriptionIds.add(refIdOut);
-			return refIdOut;
-		} catch (Exception e) {
-			logError("Failed to unmarshal SubscriptionResponse",e);
-		}
-
-		return null;
-
+	public SubscriptionRef subscribe(String listenerEndpoint) throws SOAPException, JAXBException, IOException{
+		return SubscriptionRef.subscribe(getOutputAction(), listenerEndpoint, parentService.getAddress().toString());
 	}
 
-	@Override
-	public void unsubscribe(String refId) throws SOAPException{
-		
-		subscriptionIds.remove(refId);
-		
-		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
-		SOAPMessage unsub = DPWSMessageFactory.getUnsubscribeMessage(getOutputAction(), parentService.getAddress().toString(), refId);
-		SOAPMessage resp = conn.call(unsub, parentService.getAddress().toString());
- 
-		logInfo("Unsubscribed.  Reference: " + refId );
-		
-	}
-
-	public void unsubscribeAll() throws SOAPException{
-		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
-		for(String refId : subscriptionIds){
-			SOAPMessage unsub = DPWSMessageFactory.getUnsubscribeMessage(getOutputAction(), parentService.getAddress().toString(), refId);
-			SOAPMessage resp = conn.call(unsub, parentService.getAddress().toString());
-		}
-		logInfo("Unsibscribed from the following: " + Arrays.toString(subscriptionIds.toArray(new String[]{})));
-		subscriptionIds.clear();
-	}
-
-	@Override
 	public XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException{
 		
 		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();

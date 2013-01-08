@@ -1,7 +1,9 @@
 package fi.tut.fast.dpws.utils;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,16 +30,22 @@ public class DeviceRegistry {
 	}
 	
 	// Adding DeviceRef
-	public void registerDevice(HelloType hello){
+	public DeviceRef registerDevice(HelloType hello){
 		URI id = hello.getEndpointReference().getAddress().getValue();
+		DeviceRef ref =  DeviceRef.fromHello(hello);
 		registerDeviceInternal(id, DeviceRef.fromHello(hello));
+		return ref;
 	}
 	
-	public void registerDevice(ProbeMatchesType matches){
+	public List<DeviceRef> registerDevice(ProbeMatchesType matches){
+		List<DeviceRef> deviceRefs = new ArrayList<DeviceRef>();
 		for(ProbeMatchType pm :  matches.getProbeMatch()){
 			URI id = pm.getEndpointReference().getAddress().getValue();
-			registerDeviceInternal(id, DeviceRef.fromProbeMatch(pm));
+			DeviceRef ref = DeviceRef.fromProbeMatch(pm);
+			deviceRefs.add(ref);
+			registerDeviceInternal(id, ref);
 		}
+		return deviceRefs;
 	}
 	
 	private void registerDeviceInternal(URI id, DeviceRef dev){

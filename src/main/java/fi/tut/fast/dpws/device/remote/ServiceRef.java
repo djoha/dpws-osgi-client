@@ -269,4 +269,25 @@ public class ServiceRef extends Service {
 		}
 		return events;
 	}
+	
+	public List<SubscriptionRef> subscribe(String filter, String notifyTo){
+		List<SubscriptionRef> refs = new ArrayList<SubscriptionRef>();
+		for(String f : filter.split(DPWSConstants.EVENT_FILTER_DELIMITER)){
+			try {
+				SubscriptionRef ref = SubscriptionRef.subscribe(f, notifyTo, getAddress().toString());
+				refs.add(ref);
+			} catch (SOAPException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return refs;
+	}
+
 }

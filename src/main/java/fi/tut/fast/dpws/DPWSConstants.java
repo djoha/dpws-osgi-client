@@ -20,6 +20,7 @@ public class DPWSConstants {
     public static final String SOAP_1_2_PROTOCOL = SOAPConstants.SOAP_1_2_PROTOCOL;
     public static final String LOCALE_EN = "en";
     public static final String DEFAULT_LOCALE = Locale.getDefault().getLanguage();
+    public static final String EVENT_FILTER_DELIMITER = ",";
     
 	public static final int WS_DISOVERY_PORT = 3702;
 	public static final String WS_DISCOVERY_MULTICAST_GROUP = "239.255.255.250";

@@ -1,62 +1,73 @@
 package fi.tut.fast.dpws.device.remote;
 
+import java.io.IOException;
+
+import javax.xml.bind.JAXBException;
+import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
-import javax.xml.stream.XMLStreamException;
+import javax.xml.soap.SOAPMessage;
+
+import org.xmlsoap.schemas.eventing.SubscribeResponse;
+
+import fi.tut.fast.dpws.utils.DPWSCommunication;
+import fi.tut.fast.dpws.utils.DPWSMessageFactory;
+import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 
 public class SubscriptionRef {
 
-	String id;
-	OperationReference operation;
-	Status status;
-	String endpoint;
+	private String id;
+	private String notifyTo;
+	private String serviceAddress;
+	private String filter;
 	
-	protected SubscriptionRef(String id, OperationReference operation){
+	private Status status;
+	
+	
+	private SubscriptionRef(String filter, String id, String notifyTo, String serviceAddress){		
+
 		this.id = id;
-		this.operation = operation;
-	}
-	
-	public SubscriptionRef(String id, String endpoint, OperationReference operation){
-		this.id = id;
-		this.operation = operation;
-		this.endpoint = endpoint;
-	}
-	
-	public static SubscriptionRef subscribe(String deliverTo, OperationReference operation) throws SOAPException, XMLStreamException{
-	
-		String id = operation.subscribe(deliverTo);
+		this.notifyTo = notifyTo;
+		this.serviceAddress = serviceAddress;
 		
-		SubscriptionRef ref = new SubscriptionRef(id, operation);
-		ref.setDeliverTo(deliverTo);
-		
-		return ref;
+		status = Status.SUBSCRIBED;
 	}
 	
+	public static SubscriptionRef subscribe(String filter, String notifyTo, String serviceAddress) throws SOAPException, JAXBException, IOException{
+		
+		String refId = DPWSMessageFactory.newUUID();
+		
+		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
+		SOAPMessage msg = DPWSMessageFactory.getSubscribeMessage(filter,
+												serviceAddress,
+												notifyTo,
+												refId);
+		SOAPMessage resp = conn.call(msg, serviceAddress);
+	
+		SubscribeResponse subResp = (SubscribeResponse) DPWSXmlUtil
+				.getInstance().unmarshalSoapBody(resp);
+		String refIdOut = subResp.getSubscriptionManager().getReferenceParameters().getIdentifier();
+		
+		return new SubscriptionRef(filter, refIdOut, notifyTo, serviceAddress);
+		
+	}
+
 	public void unsubscribe() throws SOAPException{
-		operation.unsubscribe(id);
-	}
-	
-	public String getId(){
-		return id;
-	}
-	
-	public OperationReference getOperation(){
-		return operation;
+		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
+		SOAPMessage unsub = DPWSMessageFactory.getUnsubscribeMessage(filter, serviceAddress, id);
+		SOAPMessage resp = conn.call(unsub, serviceAddress);
+		status = Status.ENDED;
 	}
 	
 	public Status getStatus(){
 		return status;
 	}
-
-	public String getDeliverTo(){
-		return endpoint;
+	
+	public enum Status {
+		SUBSCRIBED, EXPIRED, ENDED, UNKNOWN
 	}
 	
-	protected void setDeliverTo(String endpoint){
-		this.endpoint = endpoint;
-	}
-	
-	public enum Status{
-		ACTIVE,EXPIRED,ENDED
+	public String toString(){
+		return String.format("[%s] %s {%s} -> %s", id,serviceAddress, filter, notifyTo);
 	}
 	
 }

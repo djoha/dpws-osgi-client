@@ -48,7 +48,7 @@ public abstract class Operation {
 	protected boolean hasOutput = false;
 	protected boolean hasFault = false;
 	
-	protected List<String> subscriptionIds;
+	private List<String> subscriptionIds;
 	
 	
 	boolean event = false;
@@ -117,11 +117,11 @@ public abstract class Operation {
 		return parentService.getTypeHandler().populateElement(faultElement, values);
 	}
 	
-	public abstract String subscribe(String listenerEndpoint) throws SOAPException, XMLStreamException;
-	
-	public abstract void unsubscribe(String refId) throws SOAPException;
-	
-	public abstract XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException;
+//	public abstract SubscriptionRef subscribe(String listenerEndpoint) throws SOAPException, XMLStreamException;
+//	
+//	public abstract void unsubscribe(String refId) throws SOAPException;
+//	
+//	public abstract XmlObject invoke(XmlObject input) throws SOAPException, XmlException, ParserConfigurationException, SAXException, IOException;
 	
 	public String getName(){
 		return name;

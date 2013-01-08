@@ -31,12 +31,12 @@
 						'Action'][text()='http://schemas.xmlsoap.org/ws/2005/04/discovery/Probe']
 					</xpath>
 					<multicast>
-						<to uri="log:org.apache.camel.example?level=INFO"/>
-						<bean ref="deviceManager" method="probeReceived" />
+						<to uri="log:fi.tut.fast.DpwsClient?level=INFO"/>
+						<!-- <bean ref="deviceManager" method="probeReceived" /> -->
 					</multicast>
 				</when>
 				<otherwise>
-					<bean ref="deviceManager" method="probeReceived" />
+					<bean ref="client" method="probeReceived" />
 				</otherwise>
 			</choice>
 		</route>
@@ -66,7 +66,10 @@
 	<!-- 	Event Endpoint -->
 		<route>
 			<from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}"/>
-			<bean ref="client" method="eventReceived"/>
+			<multicast>
+				<bean ref="client" method="eventReceived"/>
+				<to uri="log:fi.tut.fast.DpwsClient?level=INFO"/>
+			</multicast>
 		</route>
 	</camelContext>
 	
@@ -79,6 +82,7 @@
 			<cm:property name="eventSinkPath" value="esink" />
 			<cm:property name="client.eventSinkPath" value="eventSink" />
 			<cm:property name="probematch.listen.port" value="61094" />
+			<cm:property name="event.type.filter" value="" />
 		</cm:default-properties>
 	</cm:property-placeholder>
 
@@ -87,6 +91,8 @@
 		<property name="someProperty" value="${some.property}" />
 		<property name="defaultEventSink" value="http://${host}:${port}/${eventSinkPath}" />
 		<property name="context" ref="blueprintBundleContext" />
+		<property name="eventSubscribeFilter" ref="blueprintBundleContext" />
+		<property name="eventTypeFilter" value="${event.type.filter}"/>
 	</bean>
 
 	<bean id="discovery" class="fi.tut.fast.dpws.discovery.DiscoveryManager"
@@ -95,7 +101,7 @@
 		<property name="host" value="${host}" />
 	</bean>
 
-	<bean id="deviceManager" class="fi.tut.fast.dpws.utils.DeviceManager"
+<!-- 	<bean id="deviceManager" class="fi.tut.fast.dpws.utils.DeviceManager"
 		init-method="init" destroy-method="destroy">
 		<property name="networkInterface" value="${networkInterface}" />
 		<property name="host" value="${host}" />
@@ -105,7 +111,7 @@
 	<bean id="deviceCreator" class="fi.tut.fast.dpws.test.DeviceInjector"
 		init-method="init">
 		<property name="manager" ref="deviceManager"/>
-	</bean>
+	</bean> -->
 	
 	<service id="dpwsClientService" ref="client"
 		interface="fi.tut.fast.dpws.IDpwsClient" auto-export="disabled" />

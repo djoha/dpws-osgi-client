@@ -3,6 +3,8 @@ package fi.tut.fast.dpws;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,6 +24,7 @@ import org.xmlsoap.schemas.discovery.ProbeMatchesType;
 import fi.tut.fast.dpws.device.remote.DeviceRef;
 import fi.tut.fast.dpws.device.remote.OperationReference;
 import fi.tut.fast.dpws.device.remote.ServiceRef;
+import fi.tut.fast.dpws.device.remote.SubscriptionRef;
 import fi.tut.fast.dpws.utils.DPWSMessageFactory;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 import fi.tut.fast.dpws.utils.DeviceRegistry;
@@ -34,6 +37,11 @@ public class DpwsClient implements IDpwsClient{
 	private String probeMatchEndpointAddress;
 	private BundleContext context;
 	private String defaultEventSink;
+	private String eventTypeFilter;
+	private String eventSinkAddress;
+	
+	
+	private List<SubscriptionRef> subscriptions;
 	
 	@Produce(uri="direct:discoveryProbe")
 	Prober p;
@@ -85,18 +93,43 @@ public class DpwsClient implements IDpwsClient{
 	}
 
 
+	public String getEventTypeFilter() {
+		return eventTypeFilter;
+	}
+
+
+	public void setEventTypeFilter(String eventTypeFilter) {
+		this.eventTypeFilter = eventTypeFilter;
+	}
+
+
 	public void destroy() throws Exception {
     	logger.info("OSGi Bundle Stopping.");
+    	for(SubscriptionRef ref : subscriptions){
+    		ref.unsubscribe();
+    		logger.info("Unsubscribed: " + ref);
+    	}
 	}
 
 	public void init() throws Exception {
     	logger.info("OSGi Bundle Initialized.");
     	DPWSMessageFactory.init();
     	DPWSXmlUtil.init(context);
+    	subscriptions = new ArrayList<SubscriptionRef>();
     	registry = new DeviceRegistry();
-    
+
     	dpwsScan();
     	
+	}
+	
+	private void handleNewDeviceRefs(List<DeviceRef> devs){
+		for(DeviceRef ref :devs){
+			handleNewDeviceRef(ref);
+		}
+	}
+	
+	private void handleNewDeviceRef(DeviceRef ref){
+		ref.subscribe(eventTypeFilter,(eventSinkAddress.length() == 0 ? defaultEventSink : eventSinkAddress) );
 	}
 	
 	public void eventReceived(Exchange message) throws IOException, SOAPException{
