@@ -51,7 +51,7 @@ public abstract class Operation {
 	private List<String> subscriptionIds;
 	
 	
-	boolean event = false;
+	protected boolean event = false;
 	
 	public Operation(){
 		

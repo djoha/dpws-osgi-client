@@ -4,6 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ import fi.tut.fast.dpws.device.remote.SubscriptionRef;
 import fi.tut.fast.dpws.utils.DPWSMessageFactory;
 import fi.tut.fast.dpws.utils.DPWSXmlUtil;
 import fi.tut.fast.dpws.utils.DeviceRegistry;
+import fi.tut.fast.dpws.utils.SOAPUtil;
 
 
 public class DpwsClient implements IDpwsClient{
@@ -41,7 +44,7 @@ public class DpwsClient implements IDpwsClient{
 	private String eventSinkAddress;
 	
 	
-	private List<SubscriptionRef> subscriptions;
+	private Map<String,SubscriptionRef> subscriptions;
 	
 	@Produce(uri="direct:discoveryProbe")
 	Prober p;
@@ -99,13 +102,17 @@ public class DpwsClient implements IDpwsClient{
 
 
 	public void setEventTypeFilter(String eventTypeFilter) {
-		this.eventTypeFilter = eventTypeFilter;
+		if(eventTypeFilter.equals("[[[NULL_FILTER]]]")){
+			this.eventTypeFilter = null;
+		}else{
+			this.eventTypeFilter = eventTypeFilter;
+		}
 	}
 
 
 	public void destroy() throws Exception {
     	logger.info("OSGi Bundle Stopping.");
-    	for(SubscriptionRef ref : subscriptions){
+    	for(SubscriptionRef ref : subscriptions.values()){
     		ref.unsubscribe();
     		logger.info("Unsubscribed: " + ref);
     	}
@@ -115,11 +122,9 @@ public class DpwsClient implements IDpwsClient{
     	logger.info("OSGi Bundle Initialized.");
     	DPWSMessageFactory.init();
     	DPWSXmlUtil.init(context);
-    	subscriptions = new ArrayList<SubscriptionRef>();
+    	subscriptions = new HashMap<String,SubscriptionRef>();
     	registry = new DeviceRegistry();
-
     	dpwsScan();
-    	
 	}
 	
 	private void handleNewDeviceRefs(List<DeviceRef> devs){
@@ -128,20 +133,39 @@ public class DpwsClient implements IDpwsClient{
 		}
 	}
 	
+	private String getNotifyTo(){
+
+		if(eventSinkAddress != null){
+			return (eventSinkAddress.isEmpty()? defaultEventSink : eventSinkAddress);
+		}
+		return defaultEventSink;
+	}
+	
 	private void handleNewDeviceRef(DeviceRef ref){
-		ref.subscribe(eventTypeFilter,(eventSinkAddress.length() == 0 ? defaultEventSink : eventSinkAddress) );
+		List<SubscriptionRef> subList = ref.subscribe(eventTypeFilter,getNotifyTo());
+		addSubscriptions(subList);
+		logger.info("Added Subscriptions: " + Arrays.toString(subList.toArray()));
+	}
+	
+	private void addSubscriptions(List<SubscriptionRef> newSubs){
+		for(SubscriptionRef ref: newSubs){
+			subscriptions.put(ref.getId(), ref);
+		}
 	}
 	
 	public void eventReceived(Exchange message) throws IOException, SOAPException{
 		SOAPMessage event = DPWSMessageFactory.recieveMessage(message.getIn().getBody(InputStream.class));
-		System.out.println("Event received: ");
-		event.writeTo(System.out);
+		
+		System.out.format("Event received: %s [%s]\n", SOAPUtil.getActionHeader(event)
+													, SOAPUtil.getWseIdentifierHeader(event));
+//		event.writeTo(System.out);
 	}
 
 	public void helloReceived(Exchange message) throws Exception{
 		HelloType hello = (HelloType) DPWSXmlUtil.getInstance().unmarshalSoapBody(message);
 		logger.info("Received Hello from " + hello.getEndpointReference().getAddress().getValue());
-		registry.registerDevice(hello);
+		
+		handleNewDeviceRef(registry.registerDevice(hello));
 	}
 
 	public void byeReceived(Exchange message) throws Exception{
@@ -159,7 +183,9 @@ public class DpwsClient implements IDpwsClient{
 		ProbeMatchesType matches = (ProbeMatchesType) DPWSXmlUtil.getInstance().unmarshalSoapBody(message);
 		logger.info("Received Probe Matches from " + matches.getProbeMatch().get(0).getEndpointReference().getAddress().getValue());
 		System.out.println("Received Probe Matches from " + matches.getProbeMatch().get(0).getEndpointReference().getAddress().getValue());
-		registry.registerDevice(matches);
+		
+		handleNewDeviceRefs(registry.registerDevice(matches));
+		
 	}
 	
 //	public void messageReceived(Exchange message) throws SOAPException, IOException{

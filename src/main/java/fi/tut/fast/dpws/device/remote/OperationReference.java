@@ -43,7 +43,7 @@ public class OperationReference extends Operation{
 
 	ServiceRef parentService;
 	
-	boolean event = false;
+//	boolean event = false;
 	
 	public OperationReference(String name, QName portType ,  ServiceRef parentService, QName inputElement, QName outputElement, QName faultElement){
 
@@ -58,9 +58,10 @@ public class OperationReference extends Operation{
 		this.name = name;
 		this.portType = portType;
 
+
 		event = ( inputElement == null );
 		
-//		subscriptionIds = new ArrayList<String>();
+		System.out.format("[%s] - InputElement : %s , isEvent() %s",name, inputElement, event);
 		
 		logger.info(String.format("%s added: %s", isEvent()? "Event" : "Operation", getName()));
 	}

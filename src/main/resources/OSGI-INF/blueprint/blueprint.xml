@@ -82,7 +82,7 @@
 			<cm:property name="eventSinkPath" value="esink" />
 			<cm:property name="client.eventSinkPath" value="eventSink" />
 			<cm:property name="probematch.listen.port" value="61094" />
-			<cm:property name="event.type.filter" value="" />
+			<cm:property name="event.type.filter" value="[[[NULL_FILTER]]]"/>
 		</cm:default-properties>
 	</cm:property-placeholder>
 
@@ -91,7 +91,6 @@
 		<property name="someProperty" value="${some.property}" />
 		<property name="defaultEventSink" value="http://${host}:${port}/${eventSinkPath}" />
 		<property name="context" ref="blueprintBundleContext" />
-		<property name="eventSubscribeFilter" ref="blueprintBundleContext" />
 		<property name="eventTypeFilter" value="${event.type.filter}"/>
 	</bean>
 

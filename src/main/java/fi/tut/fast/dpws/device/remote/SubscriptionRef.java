@@ -19,7 +19,6 @@ public class SubscriptionRef {
 	private String notifyTo;
 	private String serviceAddress;
 	private String filter;
-	
 	private Status status;
 	
 	
@@ -28,6 +27,7 @@ public class SubscriptionRef {
 		this.id = id;
 		this.notifyTo = notifyTo;
 		this.serviceAddress = serviceAddress;
+		this.filter = filter;
 		
 		status = Status.SUBSCRIBED;
 	}
@@ -51,6 +51,10 @@ public class SubscriptionRef {
 		
 	}
 
+	public String getId(){
+		return id;
+	}
+	
 	public void unsubscribe() throws SOAPException{
 		SOAPConnection conn = DPWSCommunication.getNewSoapConnection();
 		SOAPMessage unsub = DPWSMessageFactory.getUnsubscribeMessage(filter, serviceAddress, id);
@@ -68,6 +72,14 @@ public class SubscriptionRef {
 	
 	public String toString(){
 		return String.format("[%s] %s {%s} -> %s", id,serviceAddress, filter, notifyTo);
+	}
+	
+	public long sendGetStatus(){
+		return 0;
+	}
+	
+	public boolean renew(){
+		return false;
 	}
 	
 }

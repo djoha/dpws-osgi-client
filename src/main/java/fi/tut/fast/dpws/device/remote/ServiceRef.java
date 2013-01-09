@@ -52,7 +52,6 @@ public class ServiceRef extends Service {
 	public ServiceRef(String namespace, String serviceId)
 			throws URISyntaxException {
 		super(namespace, serviceId);
-		// TODO Auto-generated constructor stub
 	}
 
 	public ServiceRef(HostServiceType data) throws SOAPException, JAXBException, IOException, URISyntaxException, XmlException{
@@ -230,7 +229,6 @@ public class ServiceRef extends Service {
 //		return xjcOpts;
 	}
 	
-	
 	private void logInfo(String msg, String... args){
 		Log.info(String.format(msg, args));
 	}
@@ -250,6 +248,7 @@ public class ServiceRef extends Service {
 	public OperationReference getOperation(String name){
 		return operations.get(name);
 	}
+	
 	public Collection<OperationReference> getOperations(){
 		List<OperationReference> events = new ArrayList<OperationReference>();
 		for(OperationReference ref : operations.values()){
@@ -270,24 +269,19 @@ public class ServiceRef extends Service {
 		return events;
 	}
 	
-	public List<SubscriptionRef> subscribe(String filter, String notifyTo){
-		List<SubscriptionRef> refs = new ArrayList<SubscriptionRef>();
-		for(String f : filter.split(DPWSConstants.EVENT_FILTER_DELIMITER)){
-			try {
-				SubscriptionRef ref = SubscriptionRef.subscribe(f, notifyTo, getAddress().toString());
-				refs.add(ref);
-			} catch (SOAPException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (JAXBException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	public SubscriptionRef subscribe(String filter, String notifyTo){
+
+		try {
+			SubscriptionRef ref = SubscriptionRef.subscribe("", notifyTo, getAddress().toString());
+			return ref;
+		} catch (SOAPException e) {
+			logger.log(Level.SEVERE, "Subscription Failed.", e);
+		} catch (JAXBException e) {
+			logger.log(Level.SEVERE, "Subscription Failed.", e);
+		} catch (IOException e) {
+			logger.log(Level.SEVERE, "Subscription Failed.", e);
 		}
-		return refs;
+		return null;
 	}
 
 }

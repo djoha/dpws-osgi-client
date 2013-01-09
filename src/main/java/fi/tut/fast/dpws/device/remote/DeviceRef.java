@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -265,9 +266,12 @@ public class DeviceRef extends Device{
 	}
 	
 	public List<SubscriptionRef> subscribe(String filter, String notifyTo){
+		if(filter == null ){
+			return Collections.EMPTY_LIST;
+		}
 		List<SubscriptionRef> subs = new ArrayList<SubscriptionRef>();
 		for(ServiceRef s : getServices()){
-			subs.addAll(s.subscribe(filter, notifyTo));
+			subs.add(s.subscribe(filter, notifyTo));
 		}
 		return subs;
 	}
