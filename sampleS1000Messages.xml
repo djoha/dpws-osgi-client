@@ -333,6 +333,35 @@ HTTP GET Response for WSDL
 </definitions>
 
 
+
+&JPE!O"h''(KwoP	`U3E8
+<?xml version="1.0" encoding="UTF-8"?>
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing" xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+  <s12:Header>
+    <wsa:Action>http://www.tut.fi/wsdl/SomeService/SomeServicePortType/somethingElseHappened</wsa:Action>
+    <wsa:MessageID>urn:uuid:c103f910-f6e7-467f-5168-0050c2899117</wsa:MessageID>
+    <wsa:To>http://192.168.2.135:8808/esink</wsa:To>
+    <wsa:From>
+      <wsa:Address>http://192.168.3.79:80/dpws/ws01</wsa:Address>
+    </wsa:From>
+    <wse:Identifier>urn:uuid:2ad1cbf7-f823-4c77-b3a8-1101402ba518</wse:Identifier>
+  </s12:Header>
+  <s12:Body>
+    <somethingHappened xmlns="http://www.tut.fi/wsdl/SomeService">
+      <what xmlns="http://www.tut.fi/wsdl/SomeService">
+        <code xmlns="http://www.tut.fi/wsdl/SomeService">operation1682</code>
+        <message xmlns="http://www.tut.fi/wsdl/SomeService">some other event</message>
+		</what>
+      <where xmlns="http://www.tut.fi/wsdl/SomeService">robot0</where>
+    </somethingHappened>
+  </s12:Body>
+</s12:Envelope>
+0
+
+      
+
+
+
 Invoke Operation One
 
 
@@ -371,8 +400,7 @@ Operatoni One Response
 		</wsa:From>
 	</s12:Header>
 	<s12:Body>
-		<OutputElementOne xmlns="http://www.tut.fi/wsdl/SomeService">K1: 4 CHARS, K2: 4 CHARS
-		</OutputElementOne>
+		<OutputElementOne xmlns="http://www.tut.fi/wsdl/SomeService">K1: 4 CHARS, K2: 4 CHARS</OutputElementOne>
 	</s12:Body>
 </s12:Envelope>
 

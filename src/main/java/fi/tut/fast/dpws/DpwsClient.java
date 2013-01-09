@@ -158,7 +158,7 @@ public class DpwsClient implements IDpwsClient{
 		
 		System.out.format("Event received: %s [%s]\n", SOAPUtil.getActionHeader(event)
 													, SOAPUtil.getWseIdentifierHeader(event));
-//		event.writeTo(System.out);
+		event.writeTo(System.out);
 	}
 
 	public void helloReceived(Exchange message) throws Exception{

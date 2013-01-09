@@ -1,125 +1,20 @@
-
-[ Works: (Creates two subscriptions, both are delivered.) ]
-
 <?xml version="1.0" encoding="UTF-8"?>
-<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
-	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
-	xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+<s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
+	xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
 	<s12:Header>
-		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe
-		</wsa:Action>
-		<wsa:MessageID>urn:uuid:18f93c40-5a65-11e2-80a2-d8d73340944f
+		<wsa:Action>"http://namespace.org/Service/Port/Action"</wsa:Action>
+		<wsa:MessageID>urn:uuid:6648d070-3885-11e2-8028-d7edce9ed125
 		</wsa:MessageID>
-		<wsa:To>http://192.168.3.79:80/dpws/ws01</wsa:To>
+		<wsa:To>"http://someNewAddress:123/thing"</wsa:To>
 	</s12:Header>
 	<s12:Body>
-		<wse:Subscribe>
-			<wse:Delivery
-				Mode="http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push">
-				<wse:NotifyTo>
-					<wsa:Address>http://192.168.2.135:54399/DefaultEventSink
-					</wsa:Address>
-					<wsa:ReferenceParameters>
-						<wse:Identifier>urn:uuid:18f91530-5a65-11e2-80a1-d8d73340944f
-						</wse:Identifier>
-					</wsa:ReferenceParameters>
-				</wse:NotifyTo>
-			</wse:Delivery>
-			<wse:Filter Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/Action">http://www.tut.fi/wsdl/SomeService/SomeServicePortType/somethingElseHappened
-			</wse:Filter>
-		</wse:Subscribe>
+		<somethingHappened xmlns="http://www.tut.fi/wsdl/SomeService"
+			xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
+			<what>
+				<code>operation2271</code>
+				<message>some other event</message>
+			</what>
+			<where>robot20</where>
+		</somethingHappened>
 	</s12:Body>
 </s12:Envelope>
-
-
-<?xml version="1.0" encoding="UTF-8"?>
-<s12:Envelope xmlns:dpws="http://schemas.xmlsoap.org/ws/2006/02/devprof"
-	xmlns:s12="http://www.w3.org/2003/05/soap-envelope" xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing"
-	xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
-	<s12:Header>
-		<wsa:Action>http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe
-		</wsa:Action>
-		<wsa:MessageID>urn:uuid:1b10f8b0-5a65-11e2-80a4-d8d73340944f
-		</wsa:MessageID>
-		<wsa:To>http://192.168.3.79:80/dpws/ws01</wsa:To>
-	</s12:Header>
-	<s12:Body>
-		<wse:Subscribe>
-			<wse:Delivery
-				Mode="http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push">
-				<wse:NotifyTo>
-					<wsa:Address>http://192.168.2.135:54402/DefaultEventSink
-					</wsa:Address>
-					<wsa:ReferenceParameters>
-						<wse:Identifier>urn:uuid:1b10f8b0-5a65-11e2-80a3-d8d73340944f
-						</wse:Identifier>
-					</wsa:ReferenceParameters>
-				</wse:NotifyTo>
-			</wse:Delivery>
-			<wse:Filter Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/Action">http://www.tut.fi/wsdl/SomeService/SomeServicePortType/somethingHappened
-			</wse:Filter>
-		</wse:Subscribe>
-	</s12:Body>
-</s12:Envelope>
-
-
-[ Doesn't work:  Second subscription replaces the first ]
-
-<?xml version="1.0" encoding="utf-8" ?>
-<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
-	<env:Header>
-		<wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe
-		</wsa:Action>
-		<wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://192.168.3.79:80/dpws/ws01</wsa:To>
-		<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:uuid:21e85089-b66e-4113-b0b0-22073454c73b
-		</wsa:MessageID>
-	</env:Header>
-	<env:Body>
-		<wse:Subscribe xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
-			<wse:Delivery
-				wse:Mode="http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push">
-				<wse:NotifyTo>
-					<wsa:Address xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://192.168.2.135:8808/esink
-					</wsa:Address>
-					<wsa:ReferenceParameters
-						xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
-						<wse:Identifier>urn:uuid:aeeab1e4-d7db-416f-8067-4f3c54674863
-						</wse:Identifier>
-					</wsa:ReferenceParameters>
-				</wse:NotifyTo>
-			</wse:Delivery>
-			<wse:Filter wse:Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/Action">http://www.tut.fi/wsdl/SomeService/SomeServicePortType/somethingHappened
-			</wse:Filter>
-		</wse:Subscribe>
-	</env:Body>
-</env:Envelope>
-
-<?xml version="1.0" encoding="utf-8" ?>
-<env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
-	<env:Header>
-		<wsa:Action xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://schemas.xmlsoap.org/ws/2004/08/eventing/Subscribe
-		</wsa:Action>
-		<wsa:To xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://192.168.3.79:80/dpws/ws01</wsa:To>
-		<wsa:MessageID xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">urn:uuid:2e5ec171-7b07-48eb-9996-85e96baca4da
-		</wsa:MessageID>
-	</env:Header>
-	<env:Body>
-		<wse:Subscribe xmlns:wse="http://schemas.xmlsoap.org/ws/2004/08/eventing">
-			<wse:Delivery
-				wse:Mode="http://schemas.xmlsoap.org/ws/2004/08/eventing/DeliveryModes/Push">
-				<wse:NotifyTo>
-					<wsa:Address xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">http://192.168.2.135:8808/esink
-					</wsa:Address>
-					<wsa:ReferenceParameters
-						xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">
-						<wse:Identifier>urn:uuid:b4a54786-cdc2-41a7-95b6-17e4d38f6ad9
-						</wse:Identifier>
-					</wsa:ReferenceParameters>
-				</wse:NotifyTo>
-			</wse:Delivery>
-			<wse:Filter wse:Dialect="http://schemas.xmlsoap.org/ws/2006/02/devprof/Action">http://www.tut.fi/wsdl/SomeService/SomeServicePortType/somethingElseHappened
-			</wse:Filter>
-		</wse:Subscribe>
-	</env:Body>
-</env:Envelope>
-    

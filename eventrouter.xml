@@ -1,0 +1,39 @@
+
+<camelContext xmlns="http://activemq.apache.org/camel/schema/spring">
+	<route>
+		<from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}" />
+		<choice>
+			<when>
+				<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+					'Header']/*[local-name() =
+					'Action'][text()='http://namespace.org/Service/Port/WhateverEvent']
+				</xpath>
+				<setHeader headerName="newAddress">
+					<constant>"http://someNewAddress:123/thing"</constant>
+				</setHeader>
+				<setHeader headerName="newAction">
+					<constant>"http://namespace.org/Service/Port/Action"</constant>
+				</setHeader>
+				<to uri="xslt:file:///Users/Johannes/Desktop/eventToInput.xslt" />
+				<bean ref="client" method="eventReceived" />
+			</when>
+			<when>
+				<xpath>/*[local-name() = 'Envelope']/*[local-name() =
+					'Header']/*[local-name() =
+					'Action'][text()='http://namespace.org/Service/Port/WhateverOtherEvent']
+				</xpath>
+				<setHeader headerName="newAddress">
+					<constant>"http://someNewAddress:123/thing"</constant>
+				</setHeader>
+				<setHeader headerName="newAction">
+					<constant>"http://namespace.org/Service/Port/Action2"</constant>
+				</setHeader>
+				<to uri="xslt:file:///Users/Johannes/Desktop/eventToInput.xslt" />
+				<bean ref="client" method="eventReceived" />
+			</when>
+			<otherwise>
+				<bean ref="client" method="probeMatchesReceived" />
+			</otherwise>
+		</choice>
+	</route>
+</camelContext>

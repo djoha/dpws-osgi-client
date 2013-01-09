@@ -61,7 +61,7 @@ public class OperationReference extends Operation{
 
 		event = ( inputElement == null );
 		
-		System.out.format("[%s] - InputElement : %s , isEvent() %s",name, inputElement, event);
+//		System.out.format("[%s] - InputElement : %s , isEvent() %s",name, inputElement, event);
 		
 		logger.info(String.format("%s added: %s", isEvent()? "Event" : "Operation", getName()));
 	}
