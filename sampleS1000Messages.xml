@@ -384,7 +384,7 @@ Invoke Operation One
 	</s12:Body>
 </s12:Envelope>
 
-Operatoni One Response
+Operation One Response
 <?xml version="1.0" encoding="UTF-8"?>
 <s12:Envelope xmlns:s12="http://www.w3.org/2003/05/soap-envelope"
 	xmlns:wsa="http://schemas.xmlsoap.org/ws/2004/08/addressing">

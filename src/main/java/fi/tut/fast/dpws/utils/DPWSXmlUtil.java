@@ -265,6 +265,7 @@ public class DPWSXmlUtil {
 		SchemaTypeLoader stl = XmlBeans.loadXsd(
 				schemas.toArray(new XmlObject[] {}), opts);
 
+		
 		// System.out.format("\nSchema Compiled: %d errors %d Elements, %d Types\n",
 		// errs.size(), sts.globalElements().length , sts.globalTypes().length
 		// );

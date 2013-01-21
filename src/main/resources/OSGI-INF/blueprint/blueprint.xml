@@ -67,7 +67,7 @@
 		<route>
 			<from uri="jetty:http://{{host}}:{{port}}/{{eventSinkPath}}"/>
 				<setHeader headerName="newAddress"><constant>"http://someNewAddress:123/thing"</constant></setHeader>
-				<setHeader headerName="newAction"><constant>"http://namespace.org/Service/Port/Action"</constant></setHeader>
+				<setHe	ader headerName="newAction"><constant>"http://namespace.org/Service/Port/Action"</constant></setHeader>
      			<to uri="xslt:file:///Users/Johannes/Desktop/eventToInput.xslt"/>
 				<bean ref="client" method="eventReceived" />
 		</route>
